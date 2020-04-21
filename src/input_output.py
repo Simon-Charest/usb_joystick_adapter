@@ -1,13 +1,11 @@
 #!/usr/bin/python
 # coding=utf-8
 
+import constant
 
-def print_keys(device):
-    keys = device.keys()
-    print()
 
-    for key in keys:
-        print(f'{key}: {device[key]}')
+def get_bytes(data):
+    return [data[x:x + 2] for x in range(1, len(data) - 2, 2)]
 
 
 def get_intel_hex(file):
@@ -48,11 +46,19 @@ def get_intel_hex(file):
 
         intel_hex.append(json)
 
+    if constant.DEBUG:
+        print(f'Intel HEX: {intel_hex}')
+
     return intel_hex
 
 
-def get_bytes(data):
-    return [data[x:x + 2] for x in range(1, len(data) - 2, 2)]
+def get_data(intel_hex):
+    data = [object_['data'].ljust(32, 'F') for object_ in intel_hex if object_['record_type'] == '00']
+
+    if constant.DEBUG:
+        print(f'Data: {data}')
+
+    return data
 
 
 def get_record_type(hex_code):
@@ -91,6 +97,14 @@ def get_sum(bytes_):
         sum_ = 256 - sum_
 
     return sum_
+
+
+def print_keys(device):
+    keys = device.keys()
+    print()
+
+    for key in keys:
+        print(f'{key}: {device[key]}')
 
 
 def read(file):

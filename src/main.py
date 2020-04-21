@@ -35,7 +35,7 @@ __version__ = '1.0.0'
 import constant
 import input_output
 import usb
-# import kivy  # Package: Kivy
+import kivy  # Package: Kivy
 # kivy.require('1.11.1')
 # from kivy.app import App
 # from kivy.uix.label import Label
@@ -44,7 +44,7 @@ import usb
 def main():
     usb.manage_usb_joystick_adapter()
     intel_hex = input_output.get_intel_hex(constant.FIRMWARE)
-    print(f'Intel HEX: {intel_hex}')
+    data = input_output.get_data(intel_hex)
 
 
 if __name__ == '__main__':

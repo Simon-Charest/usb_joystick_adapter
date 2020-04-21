@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 
-DEBUG = True
+DEBUG = False
 
 VENDOR_ID = 2064  # 0x810, 2064, 0b100000010000
 PRODUCT_ID = 58625  # 0xE501, 58625, 0b1110010100000001
