@@ -32,16 +32,14 @@ __project__ = 'Retronic Design USB Joystick Adapter'
 __status__ = 'Developement'
 __version__ = '1.0.0'
 
+import app
 import constant
 import input_output
 import usb
-import kivy  # Package: Kivy
-# kivy.require('1.11.1')
-# from kivy.app import App
-# from kivy.uix.label import Label
 
 
 def main():
+    app.MyApp().run()
     usb.manage_usb_joystick_adapter()
     intel_hex = input_output.get_intel_hex(constant.FIRMWARE)
     data = input_output.get_data(intel_hex)
