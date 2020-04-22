@@ -3,12 +3,21 @@
 
 import constant
 import hid  # Package: hidapi
-import input_output
+import io_
 
 
 def get_all_devices():
     # Loop on all Universal Serial Bus (USB) Human Interface Devices (HID)
     return hid.enumerate(0, 0)
+
+
+def get_device_names(devices):
+    device_names = list()
+
+    for device in devices:
+        device_names.append(device['product_string'])
+
+    return device_names
 
 
 def get_devices(vendor_id, product_id, manufacturer_string, product_string):
@@ -31,7 +40,7 @@ def manage_usb_joystick_adapter():
 
     for device in devices:
         if constant.DEBUG:
-            input_output.print_keys(device)  # Debug
+            io_.print_keys(device)  # Debug
 
         try:
             hid_device = hid.device(constant.VENDOR_ID, constant.PRODUCT_ID)
@@ -42,7 +51,7 @@ def manage_usb_joystick_adapter():
                 print(f'Manufacturer: {hid_device.get_manufacturer_string()}')  # Debug
                 print(f'Product: {hid_device.get_product_string()}')  # Debug
 
-            firmware = input_output.read(constant.FIRMWARE)
+            firmware = io_.read(constant.FIRMWARE)
 
             if constant.DEBUG:
                 print(f'Firmware: {firmware}')

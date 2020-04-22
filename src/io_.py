@@ -2,10 +2,26 @@
 # coding=utf-8
 
 import constant
+import glob
+import os
 
 
 def get_bytes(data):
     return [data[x:x + 2] for x in range(1, len(data) - 2, 2)]
+
+
+def get_files(path):
+    files = glob.glob(path)
+
+    if constant.DEBUG:
+        print(f'Path: {path}')
+        print(f'Files: {files}')
+
+    return glob.glob(path)
+
+
+def get_file_names(files):
+    return [os.path.splitext(os.path.basename(file))[0] for file in files]
 
 
 def get_intel_hex(file):
