@@ -44,11 +44,15 @@ def get_devices(vendor_id, product_id, manufacturer_string, product_string):
 
 def get_identifier(path):
     string = path.decode()  # Convert bytes to string
-    identifier = string[28:36]  # Keep unique identifier
+    paths = string.split('#')
+    identifiers = paths[2].split('&')
+    identifier = identifiers[1]  # Keep unique identifier
 
     if constant.DEBUG:
         print(f'Path: {path}')
         print(f'String: {string}')
+        print(f'Paths: {paths}')
+        print(f'Identifiers: {identifiers}')
         print(f'Identifier: {identifier}')
 
     return identifier

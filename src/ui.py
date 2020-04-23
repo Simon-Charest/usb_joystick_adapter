@@ -59,14 +59,14 @@ def run():
     """ Third row """
 
     # Display button
-    update_button = Button(root, text='Update', command=lambda: update(devices, device_name, file))
+    update_button = Button(root, text='Update Device', command=lambda: update_device(devices, device_name, file))
     update_button.grid(row=2, column=1, sticky=E)
 
     # Redraw
     root.mainloop()
 
 
-def update(devices, device_name, file):
+def update_device(devices, device_name, file):
     # Get device by name
     device = usb.get_device(devices, device_name)
 
