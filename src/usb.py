@@ -23,7 +23,16 @@ def get_device_names(devices):
     device_names = list()
 
     for device in devices:
-        device_names.append(f"{device['product_string']} ({device['path']})")
+        path = device['path']
+        string = path.decode()  # Convert bytes to string
+        identifier = string[28:36]  # Keep unique identifier
+
+        if constant.DEBUG:
+            print(f'Path: {path}')
+            print(f'String: {string}')
+            print(f'Identifier: {identifier}')
+
+        device_names.append(f"{device['product_string']} ({identifier})")
 
     return device_names
 
