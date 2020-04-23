@@ -1,17 +1,9 @@
 #!/usr/bin/python
 # coding=utf-8
 
-__author__ = 'Simon Charest'
+__author__ = 'Retronic Design'
 __copyright__ = 'Copyright © 2020 Retronic Design. All rights reserved.'
 __credits__ = [
-    'Simon Charest',
-    'SLCIT, Inc.',
-    'simoncharest@gmail.com',
-    'https://www.facebook.com/simon.charest/',
-    'https://github.com/Simon-Charest',
-    'https://www.linkedin.com/in/simoncharest/',
-    'https://twitter.com/scharest',
-
     'Francis-Olivier Gradel, Eng.',
     'Retronic Design',
     'info@retronicdesign.com',
@@ -22,6 +14,14 @@ __credits__ = [
     'retronicdesign.com',
     'https://atariage.com/forums/profile/37766-nitz1976/',
 
+    'Simon Charest',
+    'SLCIT, Inc.',
+    'simoncharest@gmail.com',
+    'https://www.facebook.com/simon.charest/',
+    'https://github.com/Simon-Charest',
+    'https://www.linkedin.com/in/simoncharest/',
+    'https://twitter.com/scharest',
+
     'Gary Bishop',
     'gb@cs.unc.edu',
     'https://github.com/gbishop',
@@ -30,10 +30,10 @@ __credits__ = [
 ]
 __email__ = 'info@retronicdesign.com'
 __license__ = 'GNU'
-__maintainer__ = 'Simon Charest and Francis-Olivier Gradel, Eng.'
-__project__ = 'Retronic Design USB Joystick Adapter'
+__maintainer__ = 'Francis-Olivier Gradel, Eng. and Simon Charest'
+__project__ = 'USB Joystick Adapter'
 __status__ = 'Developement'
-__version__ = '1.0.0'
+__version__ = '4.0.0'
 
 DEBUG = True
 
@@ -48,3 +48,4 @@ BOOT_MANUFACTURER_STRING = 'obdev.at'
 BOOT_PRODUCT_STRING = 'HIDBoot'
 
 FIRMWARE = '../bin/*.hex'
+ICON = '../img/1f579.png'

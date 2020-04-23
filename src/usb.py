@@ -11,11 +11,19 @@ def get_all_devices():
     return hid.enumerate(0, 0)
 
 
+def get_device(devices, device_name):
+    for device in devices:
+        if device['path'] in device_name:
+            return device
+
+    return None
+
+
 def get_device_names(devices):
     device_names = list()
 
     for device in devices:
-        device_names.append(device['product_string'])
+        device_names.append(f"{device['product_string']} ({device['path']})")
 
     return device_names
 
@@ -40,7 +48,7 @@ def manage_usb_joystick_adapter():
 
     for device in devices:
         if constant.DEBUG:
-            io_.print_keys(device)  # Debug
+            io_.print_keys(device)
 
         try:
             hid_device = hid.device(constant.VENDOR_ID, constant.PRODUCT_ID)
@@ -48,8 +56,8 @@ def manage_usb_joystick_adapter():
             hid_device.set_nonblocking(1)
 
             if constant.DEBUG:
-                print(f'Manufacturer: {hid_device.get_manufacturer_string()}')  # Debug
-                print(f'Product: {hid_device.get_product_string()}')  # Debug
+                print(f'Manufacturer: {hid_device.get_manufacturer_string()}')
+                print(f'Product: {hid_device.get_product_string()}')
 
             firmware = io_.read(constant.FIRMWARE)
 
