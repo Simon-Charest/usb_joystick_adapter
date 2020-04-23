@@ -63,36 +63,20 @@ def run():
     update_button = Button(root, text='Update Device',
                            command=lambda: update_device(devices, device_name.get(), files, file_name.get()))
     update_button.grid(row=2, column=1, sticky=E)
-#
+
     # Redraw
     root.mainloop()
 
 
-def update_device(devices, device_name, files, file_name):
-    if not (device_name and file_name):
-        messagebox.showinfo('Information', 'Device and configuration must be selected.')
-
-        return
-
-    # Get device by name
-    device = usb.get_device(devices, device_name)
-
-    # Read Intel HEX file
-    file = usb.get_file(files, file_name)
-    intel_hex = io_.get_intel_hex(file)
-    data = io_.get_data(intel_hex)
-
-    # Write to USB device
-    # device.write(data)
-
-
 def show_about(x=0, y=0):
+    # Display form
     top_level = Toplevel()
     top_level.grab_set()
     top_level.resizable(0, 0)  # Remove maximize button
     top_level.wm_title(f'About {constant.__project__}')
     top_level.geometry(f'+{x}+{y}')
 
+    # Display label
     about_label = Label(top_level, text=f'{constant.__project__}\n'
                                         f'Version {constant.__version__}\n'
                                         f'{constant.__copyright__}\n'
@@ -104,5 +88,24 @@ def show_about(x=0, y=0):
                                         f'This product is license under the {constant.__license__} License Terms.')
     about_label.grid()
 
+    # Display button
     ok_button = Button(top_level, text='OK', command=top_level.destroy)
     ok_button.grid(row=1, column=0)
+
+
+def update_device(devices, device_name, files, file_name):
+    if not (device_name and file_name):
+        messagebox.showinfo('Information', 'Device and configuration must be selected.')
+
+        return
+
+    # Get device by name
+    device = usb.get_device(devices, device_name)
+
+    # Get data from Intel HEX file
+    file = usb.get_file(files, file_name)
+    intel_hex = io_.get_intel_hex(file)
+    data = io_.get_data(intel_hex)
+
+    # Write data to device
+    usb.write(device, data)

@@ -70,11 +70,16 @@ def get_intel_hex(file):
 
 def get_data(intel_hex):
     data = [object_['data'].ljust(32, 'F') for object_ in intel_hex if object_['record_type'] == '00']
+    bytes_ = list()
+
+    for d in data:
+        bytes_.append([int(d[b:b + 2], 16) for b in range(0, len(d), 2)])
 
     if constant.DEBUG:
         print(f'Data: {data}')
+        print(f'Bytes: {bytes_}')
 
-    return data
+    return bytes_
 
 
 def get_record_type(hex_code):

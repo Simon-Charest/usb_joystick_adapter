@@ -66,37 +66,29 @@ def get_identifier(path):
     return identifier
 
 
-def manage_usb_joystick_adapter():
-    devices = get_devices([constant.VENDOR_ID, constant.BOOT_VENDOR_ID], [constant.PRODUCT_ID, constant.BOOT_PRODUCT_ID],
-                          [constant.MANUFACTURER_STRING, constant.BOOT_MANUFACTURER_STRING], [constant.PRODUCT_STRING, constant.BOOT_PRODUCT_STRING])
+def write(device, data):
+    try:
+        print(f'Opening device')
+        hid_device = hid.device(device['vendor_id'], device['product_id'])
+        hid_device.open_path(device['path'])
+        hid_device.set_nonblocking(1)
 
-    for device in devices:
         if constant.DEBUG:
-            io_.print_keys(device)
+            print(f'Manufacturer: {hid_device.get_manufacturer_string()}')
+            print(f'Product: {hid_device.get_product_string()}')
+            print(f'Data: {data}')
 
-        try:
-            hid_device = hid.device(constant.VENDOR_ID, constant.PRODUCT_ID)
-            hid_device.open_path(device['path'])
-            hid_device.set_nonblocking(1)
-
+        for block in data:
             if constant.DEBUG:
-                print(f'Manufacturer: {hid_device.get_manufacturer_string()}')
-                print(f'Product: {hid_device.get_product_string()}')
+                print(f'Block: {block}')
 
-            firmware = io_.read(constant.FIRMWARE)
+            hid_device.write(block)
 
-            if constant.DEBUG:
-                print(f'Firmware: {firmware}')
+        hid_device.close()
+        print(f'Device closed')
 
-            # hid_device.write(firmware)  # Write data to device
+    except IOError as io_error:
+        print(f'Input/Output Error Exception: {io_error}')
 
-            # TODO: Read back the hexadecimal code that has been written
-            # print(hid_device.read(5))
-
-            hid_device.close()
-
-        except IOError as io_error:
-            print(f'Input/Output Error Exception: {io_error}')
-
-        except ValueError as value_error:
-            print(f'Value Error Exception: {value_error}')
+    except ValueError as value_error:
+        print(f'Value Error Exception: {value_error}')
