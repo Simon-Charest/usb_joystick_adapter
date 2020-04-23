@@ -7,50 +7,68 @@ import io_
 import usb
 
 
-def show():
+def run():
+    # Display application
     root = Tk()
-    root.geometry('800x600')
+    root.columnconfigure(0, weight=1)
+    root.columnconfigure(1, weight=1)
+    root.columnconfigure(2, weight=1)
+    root.geometry('400x300')
     root.tk.call('wm', 'iconphoto', root._w, PhotoImage(file=constant.ICON))
     root.title(constant.__project__)
 
-    devices_label = Label(root, text='Device')
-    devices_label.pack(anchor=W)
+    """ First row """
 
+    # Display label
+    devices_label = Label(root, text='Device:')
+    devices_label.grid(row=0, column=0)
+
+    # Manage option menu
     devices = usb.get_devices([constant.VENDOR_ID, constant.BOOT_VENDOR_ID],
                               [constant.PRODUCT_ID, constant.BOOT_PRODUCT_ID],
                               [constant.MANUFACTURER_STRING, constant.BOOT_MANUFACTURER_STRING],
                               [constant.PRODUCT_STRING, constant.BOOT_PRODUCT_STRING])
     device_names = usb.get_device_names(devices)
 
+    # Display option menu
     device_name = StringVar(root)
     device_option_menu = OptionMenu(root, device_name, *device_names)
-    device_option_menu.pack(anchor=W)
+    device_option_menu.config(width=35)
+    device_option_menu.grid(row=0, column=1, sticky=E)
 
-    devices_label = Label(root, text='Configuration')
-    devices_label.pack(anchor=W)
+    # Display button
+    about_button = Button(root, text='About', command=lambda: show_about(root.winfo_rootx(), root.winfo_rooty()))
+    about_button.grid(row=0, column=2)
 
+    """ Second row """
+
+    # Display label
+    devices_label = Label(root, text='Configuration:')
+    devices_label.grid(row=1, column=0)
+
+    # Manage option menu
     files = io_.get_files(constant.FIRMWARE)
     file_names = io_.get_file_names(files)
 
+    # Display option menu
     file = StringVar(root)
     file_option_menu = OptionMenu(root, file, *file_names)
-    file_option_menu.pack(anchor=W)
+    file_option_menu.config(width=35)
+    file_option_menu.grid(row=1, column=1, sticky=E)
 
+    """ Third row """
+
+    # Display button
     update_button = Button(root, text='Update', command=lambda: update(devices, device_name, file))
-    update_button.pack(anchor=W)
+    update_button.grid(row=2, column=1, sticky=E)
 
-    about_button = Button(root, text='About', command=lambda: show_about(root.winfo_rootx(), root.winfo_rooty()))
-    about_button.pack(anchor=W)
-
+    # Redraw
     root.mainloop()
 
 
 def update(devices, device_name, file):
-    # TODO: Dev this
-    print(file)
-
     # Get device by name
-    # device = usb.get_device(devices, device_name)
+    device = usb.get_device(devices, device_name)
 
     # Read Intel HEX file
     # intel_hex = io_.get_intel_hex(file)

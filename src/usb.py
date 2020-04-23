@@ -13,7 +13,7 @@ def get_all_devices():
 
 def get_device(devices, device_name):
     for device in devices:
-        if device['path'] in device_name:
+        if get_identifier(device['path']) in device_name:
             return device
 
     return None
@@ -23,16 +23,7 @@ def get_device_names(devices):
     device_names = list()
 
     for device in devices:
-        path = device['path']
-        string = path.decode()  # Convert bytes to string
-        identifier = string[28:36]  # Keep unique identifier
-
-        if constant.DEBUG:
-            print(f'Path: {path}')
-            print(f'String: {string}')
-            print(f'Identifier: {identifier}')
-
-        device_names.append(f"{device['product_string']} ({identifier})")
+        device_names.append(f"{device['product_string']} ({get_identifier(device['path'])})")
 
     return device_names
 
@@ -49,6 +40,18 @@ def get_devices(vendor_id, product_id, manufacturer_string, product_string):
             devices.append(device)
 
     return devices
+
+
+def get_identifier(path):
+    string = path.decode()  # Convert bytes to string
+    identifier = string[28:36]  # Keep unique identifier
+
+    if constant.DEBUG:
+        print(f'Path: {path}')
+        print(f'String: {string}')
+        print(f'Identifier: {identifier}')
+
+    return identifier
 
 
 def manage_usb_joystick_adapter():

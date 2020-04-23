@@ -16,7 +16,7 @@ def main():
     #     intel_hex = io_.get_intel_hex(file)
     #     data = io_.get_data(intel_hex)
 
-    ui.show()
+    ui.run()
 
 
 if __name__ == '__main__':
