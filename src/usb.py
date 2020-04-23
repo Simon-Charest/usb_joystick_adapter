@@ -19,6 +19,14 @@ def get_device(devices, device_name):
     return None
 
 
+def get_file(files, file_name):
+    for file in files:
+        if file_name in file:
+            return file
+
+    return None
+
+
 def get_device_names(devices):
     device_names = list()
 

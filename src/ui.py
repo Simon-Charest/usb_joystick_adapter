@@ -2,6 +2,7 @@
 # coding=utf-8
 
 from tkinter import *
+from tkinter import messagebox
 import constant
 import io_
 import usb
@@ -51,28 +52,35 @@ def run():
     file_names = io_.get_file_names(files)
 
     # Display option menu
-    file = StringVar(root)
-    file_option_menu = OptionMenu(root, file, *file_names)
+    file_name = StringVar(root)
+    file_option_menu = OptionMenu(root, file_name, *file_names)
     file_option_menu.config(width=35)
     file_option_menu.grid(row=1, column=1, sticky=E)
 
     """ Third row """
 
     # Display button
-    update_button = Button(root, text='Update Device', command=lambda: update_device(devices, device_name, file))
+    update_button = Button(root, text='Update Device',
+                           command=lambda: update_device(devices, device_name.get(), files, file_name.get()))
     update_button.grid(row=2, column=1, sticky=E)
-
+#
     # Redraw
     root.mainloop()
 
 
-def update_device(devices, device_name, file):
+def update_device(devices, device_name, files, file_name):
+    if not (device_name and file_name):
+        messagebox.showinfo('Information', 'Device and configuration must be selected.')
+
+        return
+
     # Get device by name
     device = usb.get_device(devices, device_name)
 
     # Read Intel HEX file
-    # intel_hex = io_.get_intel_hex(file)
-    # data = io_.get_data(intel_hex)
+    file = usb.get_file(files, file_name)
+    intel_hex = io_.get_intel_hex(file)
+    data = io_.get_data(intel_hex)
 
     # Write to USB device
     # device.write(data)
