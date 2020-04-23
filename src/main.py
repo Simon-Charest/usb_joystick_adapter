@@ -1,10 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 
-import constant
-import io_
 import ui
-import usb
 
 
 def main():

@@ -3,7 +3,6 @@
 
 import constant
 import hid  # Package: hidapi
-import io_
 
 
 def get_all_devices():

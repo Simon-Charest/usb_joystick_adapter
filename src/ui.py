@@ -109,3 +109,5 @@ def update_device(devices, device_name, files, file_name):
 
     # Write data to device
     usb.write(device, data)
+
+    messagebox.showinfo('Success', 'Configuration written to device successfully.')
