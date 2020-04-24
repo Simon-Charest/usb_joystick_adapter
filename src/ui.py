@@ -70,8 +70,34 @@ def run():
                            command=lambda: update_device(devices, device_name.get(), files, file_name.get()))
     update_button.grid(row=2, column=1, sticky=E)
 
+    """ Fourth row """
+
+    # Display button
+    read_button = Button(root, text='Read Device', command=lambda: read_device(devices, device_name.get(), data_label))
+    read_button.grid(row=3, column=0)
+
+    # Display label
+    data_label = Label(root, text='')
+    data_label.grid(row=3, column=1, columnspan=2)
+
     # Redraw
     root.mainloop()
+
+
+def read_device(devices, device_name, data_label):
+    if device_name in ('', 'None'):
+        messagebox.showinfo('Information', 'Device must be selected.')
+
+        return
+
+    # Get device by name
+    device = usb.get_device(devices, device_name)
+
+    # Read data from device
+    data = usb.read(device)
+
+    # Display data using a label
+    data_label['text'] = data
 
 
 def show_about(x=0, y=0):
@@ -88,7 +114,7 @@ def show_about(x=0, y=0):
                                         f'{constant.__copyright__}\n'
                                         f'\n'
                                         f'The {constant.__project__} and its software are the propriety of {constant.__author__}.\n'
-                                        f'The hardware is sold without any warranty. The software is open source and provided free of charge.\n'
+                                        f'The hardware is sold without any warranty. The software is open-source and provided free of charge.\n'
                                         f'Both are to be used with specific devices with DB9 connectors.\n'
                                         f'\n'
                                         f'This product is license under the {constant.__license__} License Terms.')

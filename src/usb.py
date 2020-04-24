@@ -74,7 +74,7 @@ def get_identifier(path):
 
 
 def get_manufacturer_string(device):
-    # Patches a bug in the hardware which prevents the manufacturer_string to be read correctly upon plugging of the device
+    # Patches a bug in the hardware which prevents the manufacturer_string to be read correctly upon plugging the device
 
     if device['manufacturer_string']:
         return device['manufacturer_string']
@@ -87,7 +87,7 @@ def get_manufacturer_string(device):
 
 
 def get_product_string(device):
-    # Patches a bug in the hardware which prevents the product_string to be read correctly upon plugging of the device
+    # Patches a bug in the hardware which prevents the product_string to be read correctly upon plugging the device
 
     if device['product_string']:
         return device['product_string']
@@ -111,7 +111,7 @@ def read(device):
         if constant.DEBUG:
             print(f'Reading from device')
 
-        integers = hid_device.read()
+        integers = hid_device.read(1)  # TODO: Fix this
         hid_device.close()
 
         if constant.DEBUG:

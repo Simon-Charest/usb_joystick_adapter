@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # coding=utf-8
 
+import datetime_
+
 __author__ = 'Retronic Design'
-__copyright__ = 'Copyright © 2020 Retronic Design. All rights reserved.'
+__email__ = 'info@retronicdesign.com'
+__copyright__ = f'Copyright © {datetime_.get_years(2012)} {__author__} <{__email__}>. All rights reserved.'
 __credits__ = [
     'Francis-Olivier Gradel, Eng.',
     'Retronic Design',
@@ -30,7 +33,6 @@ __credits__ = [
     'https://twitter.com/gbishop',
     'http://www.cs.unc.edu/~gb/'
 ]
-__email__ = 'info@retronicdesign.com'
 __license__ = 'GNU'
 __maintainer__ = 'Francis-Olivier Gradel, Eng. and Simon Charest'
 __project__ = 'USB Joystick Adapter'
@@ -51,3 +53,5 @@ BOOT_PRODUCT_STRING = 'HIDBoot'
 
 FIRMWARE = '../bin/*.hex'
 ICON = '../img/1f579.png'
+
+
