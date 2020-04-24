@@ -10,6 +10,24 @@ def get_bytes(data):
     return [data[x:x + 2] for x in range(1, len(data) - 2, 2)]
 
 
+def get_data(intel_hex):
+    data = [object_['data'].ljust(32, 'F') for object_ in intel_hex if object_['record_type'] == '00']
+    bytes_ = list()
+
+    for d in data:
+        bytes_.append([int(d[b:b + 2], 16) for b in range(0, len(d), 2)])
+
+    if constant.DEBUG:
+        print(f'Data: {data}')
+        print(f'Bytes: {bytes_}')
+
+    return bytes_
+
+
+def get_file_names(files):
+    return [os.path.splitext(os.path.basename(file))[0] for file in files]
+
+
 def get_files(path):
     files = glob.glob(path)
 
@@ -18,10 +36,6 @@ def get_files(path):
         print(f'Files: {files}')
 
     return glob.glob(path)
-
-
-def get_file_names(files):
-    return [os.path.splitext(os.path.basename(file))[0] for file in files]
 
 
 def get_intel_hex(file):
@@ -66,20 +80,6 @@ def get_intel_hex(file):
         print(f'Intel HEX: {intel_hex}')
 
     return intel_hex
-
-
-def get_data(intel_hex):
-    data = [object_['data'].ljust(32, 'F') for object_ in intel_hex if object_['record_type'] == '00']
-    bytes_ = list()
-
-    for d in data:
-        bytes_.append([int(d[b:b + 2], 16) for b in range(0, len(d), 2)])
-
-    if constant.DEBUG:
-        print(f'Data: {data}')
-        print(f'Bytes: {bytes_}')
-
-    return bytes_
 
 
 def get_record_type(hex_code):

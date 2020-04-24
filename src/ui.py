@@ -33,6 +33,12 @@ def run():
 
     # Display option menu
     device_name = StringVar(root)
+
+    if constant.DEBUG:
+        print(devices)
+        print(device_names)
+        print(device_name)
+
     device_option_menu = OptionMenu(root, device_name, *device_names)
     device_option_menu.config(width=35)
     device_option_menu.grid(row=0, column=1, sticky=E)
@@ -94,7 +100,7 @@ def show_about(x=0, y=0):
 
 
 def update_device(devices, device_name, files, file_name):
-    if not (device_name and file_name):
+    if device_name in ('', 'None') or file_name in ('', 'None'):
         messagebox.showinfo('Information', 'Device and configuration must be selected.')
 
         return
