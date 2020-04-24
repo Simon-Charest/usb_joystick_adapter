@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # coding=utf-8
 
-import ui
+import ui_rd
 
 
-def main():
-    ui.run()
+def main_rd():
+    ui_rd.run()
 
 
 if __name__ == '__main__':
-    main()
+    main_rd()

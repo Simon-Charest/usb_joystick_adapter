@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 
-import constant
+import constant_rd
 import glob
 import os
 
@@ -17,7 +17,7 @@ def get_data(intel_hex):
     for d in data:
         bytes_.append([int(d[b:b + 2], 16) for b in range(0, len(d), 2)])
 
-    if constant.DEBUG:
+    if constant_rd.DEBUG:
         print(f'Data: {data}')
         print(f'Bytes: {bytes_}')
 
@@ -31,7 +31,7 @@ def get_file_names(files):
 def get_files(path):
     files = glob.glob(path)
 
-    if constant.DEBUG:
+    if constant_rd.DEBUG:
         print(f'Path: {path}')
         print(f'Files: {files}')
 
@@ -76,7 +76,7 @@ def get_intel_hex(file):
 
         intel_hex.append(json)
 
-    if constant.DEBUG:
+    if constant_rd.DEBUG:
         print(f'Intel HEX: {intel_hex}')
 
     return intel_hex

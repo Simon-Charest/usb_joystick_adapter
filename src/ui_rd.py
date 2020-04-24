@@ -3,9 +3,16 @@
 
 from tkinter import *
 from tkinter import messagebox
-import constant
-import io_
+import constant_rd
+import hidapi_rd
+import io_rd
+import pyusb_rd
 import usb
+import usb.core
+import usb.backend
+import usb.backend.libusb1 as libusb1
+import usb.backend.libusb0 as libusb0
+import usb.backend.openusb as openusb
 
 
 def run():
@@ -15,8 +22,8 @@ def run():
     root.columnconfigure(1, weight=1)
     root.columnconfigure(2, weight=1)
     root.geometry('400x300')
-    root.tk.call('wm', 'iconphoto', root._w, PhotoImage(file=constant.ICON))
-    root.title(constant.__project__)
+    root.tk.call('wm', 'iconphoto', root._w, PhotoImage(file=constant_rd.ICON))
+    root.title(constant_rd.__project__)
 
     """ First row """
 
@@ -25,14 +32,14 @@ def run():
     devices_label.grid(row=0, column=0)
 
     # Manage option menu
-    devices = usb.get_devices([constant.VENDOR_ID, constant.BOOT_VENDOR_ID],
-                              [constant.PRODUCT_ID, constant.BOOT_PRODUCT_ID])
-    device_names = usb.get_device_names(devices)
+    devices = hidapi_rd.get_devices([constant_rd.VENDOR_ID, constant_rd.BOOT_VENDOR_ID],
+                                    [constant_rd.PRODUCT_ID, constant_rd.BOOT_PRODUCT_ID])
+    device_names = hidapi_rd.get_device_names(devices)
 
     # Display option menu
     device_name = StringVar(root)
 
-    if constant.DEBUG:
+    if constant_rd.DEBUG:
         print(devices)
         print(device_names)
         print(device_name)
@@ -52,8 +59,8 @@ def run():
     devices_label.grid(row=1, column=0)
 
     # Manage option menu
-    files = io_.get_files(constant.FIRMWARE)
-    file_names = io_.get_file_names(files)
+    files = io_rd.get_files(constant_rd.FIRMWARE)
+    file_names = io_rd.get_file_names(files)
 
     # Display option menu
     file_name = StringVar(root)
@@ -88,11 +95,22 @@ def read_device(devices, device_name, data_label):
 
         return
 
+    """ TODO: This is a test using HIDAPI (Input/Output Error Exception: read error) """
+
+    # # Get device by name
+    # device = hidapi_rd.get_device(devices, device_name)
+    #
+    # # Read data from device
+    # address = int('0000', 16)
+    # data = hidapi_rd.read(device, address)
+
+    """ TODO: This is a test using PyUSB (AttributeError: module 'usb.backend.openusb' has no attribute 'enumerate_devices') """
+
     # Get device by name
-    device = usb.get_device(devices, device_name)
+    device = usb.core.find(idVendor=constant_rd.BOOT_VENDOR_ID, idProduct=constant_rd.BOOT_PRODUCT_ID, backend=openusb)
 
     # Read data from device
-    data = usb.read(device)
+    data = pyusb_rd.get_hid_report(device)
 
     # Display data using a label
     data_label['text'] = data
@@ -103,19 +121,19 @@ def show_about(x=0, y=0):
     top_level = Toplevel()
     top_level.grab_set()
     top_level.resizable(0, 0)  # Remove maximize button
-    top_level.wm_title(f'About {constant.__project__}')
+    top_level.wm_title(f'About {constant_rd.__project__}')
     top_level.geometry(f'+{x}+{y}')
 
     # Display label
-    about_label = Label(top_level, text=f'{constant.__project__}\n'
-                                        f'Version {constant.__version__}\n'
-                                        f'{constant.__copyright__}\n'
+    about_label = Label(top_level, text=f'{constant_rd.__project__}\n'
+                                        f'Version {constant_rd.__version__}\n'
+                                        f'{constant_rd.__copyright__}\n'
                                         f'\n'
-                                        f'The {constant.__project__} and its software are the propriety of {constant.__author__}.\n'
+                                        f'The {constant_rd.__project__} and its software are the propriety of {constant_rd.__author__}.\n'
                                         f'The hardware is sold without any warranty. The software is open-source and provided free of charge.\n'
                                         f'Both are to be used with specific devices with DB9 connectors.\n'
                                         f'\n'
-                                        f'This product is license under the {constant.__license__} License Terms.')
+                                        f'This product is license under the {constant_rd.__license__} License Terms.')
     about_label.grid()
 
     # Display button
@@ -130,14 +148,14 @@ def update_device(devices, device_name, files, file_name):
         return
 
     # Get device by name
-    device = usb.get_device(devices, device_name)
+    device = hidapi_rd.get_device(devices, device_name)
 
     # Get data from Intel HEX file
-    file = usb.get_file(files, file_name)
-    intel_hex = io_.get_intel_hex(file)
-    data = io_.get_data(intel_hex)
+    file = hidapi_rd.get_file(files, file_name)
+    intel_hex = io_rd.get_intel_hex(file)
+    data = io_rd.get_data(intel_hex)
 
     # Write data to device
-    usb.write(device, data)
+    hidapi_rd.write(device, data)
 
     messagebox.showinfo('Success', 'Configuration written to device successfully.')

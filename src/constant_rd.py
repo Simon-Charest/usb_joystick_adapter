@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # coding=utf-8
 
-import datetime_
+import datetime_rd
 
 __author__ = 'Retronic Design'
 __email__ = 'info@retronicdesign.com'
-__copyright__ = f'Copyright © {datetime_.get_years(2012)} {__author__} <{__email__}>. All rights reserved.'
+__copyright__ = f'Copyright © {datetime_rd.get_years(2012)} {__author__} <{__email__}>. All rights reserved.'
 __credits__ = [
     'Francis-Olivier Gradel, Eng.',
     'Retronic Design',

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 
-import constant
+import constant_rd
 import hid  # Package: hidapi
 
 
@@ -33,14 +33,14 @@ def get_device_names(devices):
 def get_devices(vendor_id, product_id):
     hid_devices = get_all_devices()
 
-    if constant.DEBUG:
+    if constant_rd.DEBUG:
         print(f'HID Devices: {hid_devices}')
 
     devices = list()
 
     # Loop on all Universal Serial Bus (USB) Human Interface Devices (HID)
     for hid_device in hid_devices:
-        if constant.DEBUG:
+        if constant_rd.DEBUG:
             print(f'HID Device: {hid_device}')
 
         if hid_device['vendor_id'] in vendor_id and hid_device['product_id'] in product_id:
@@ -63,7 +63,7 @@ def get_identifier(path):
     identifiers = paths[2].split('&')
     identifier = identifiers[1]  # Keep unique identifier
 
-    if constant.DEBUG:
+    if constant_rd.DEBUG:
         print(f'Path: {path}')
         print(f'String: {string}')
         print(f'Paths: {paths}')
@@ -79,11 +79,11 @@ def get_manufacturer_string(device):
     if device['manufacturer_string']:
         return device['manufacturer_string']
 
-    elif device['vendor_id'] == constant.VENDOR_ID and device['product_id'] == constant.PRODUCT_ID:
-        return constant.MANUFACTURER_STRING
+    elif device['vendor_id'] == constant_rd.VENDOR_ID and device['product_id'] == constant_rd.PRODUCT_ID:
+        return constant_rd.MANUFACTURER_STRING
 
-    elif device['vendor_id'] == constant.BOOT_VENDOR_ID and device['product_id'] == constant.BOOT_PRODUCT_ID:
-        return constant.BOOT_MANUFACTURER_STRING
+    elif device['vendor_id'] == constant_rd.BOOT_VENDOR_ID and device['product_id'] == constant_rd.BOOT_PRODUCT_ID:
+        return constant_rd.BOOT_MANUFACTURER_STRING
 
 
 def get_product_string(device):
@@ -92,29 +92,31 @@ def get_product_string(device):
     if device['product_string']:
         return device['product_string']
 
-    elif device['vendor_id'] == constant.VENDOR_ID and device['product_id'] == constant.PRODUCT_ID:
-        return constant.PRODUCT_STRING
+    elif device['vendor_id'] == constant_rd.VENDOR_ID and device['product_id'] == constant_rd.PRODUCT_ID:
+        return constant_rd.PRODUCT_STRING
 
-    elif device['vendor_id'] == constant.BOOT_VENDOR_ID and device['product_id'] == constant.BOOT_PRODUCT_ID:
-        return constant.BOOT_PRODUCT_STRING
+    elif device['vendor_id'] == constant_rd.BOOT_VENDOR_ID and device['product_id'] == constant_rd.BOOT_PRODUCT_ID:
+        return constant_rd.BOOT_PRODUCT_STRING
 
 
-def read(device):
+def read(device, address):
     try:
-        if constant.DEBUG:
+        if constant_rd.DEBUG:
             print(f'Opening device')
 
         hid_device = hid.device(device['vendor_id'], device['product_id'])
         hid_device.open_path(device['path'])
         hid_device.set_nonblocking(1)
 
-        if constant.DEBUG:
+        if constant_rd.DEBUG:
             print(f'Reading from device')
 
-        integers = hid_device.read(int('0x0', 16))  # TODO: Fix this
+        # TODO: Fix this
+        integers = hid_device.read(address)
+
         hid_device.close()
 
-        if constant.DEBUG:
+        if constant_rd.DEBUG:
             print(f'Device closed')
 
         return integers
@@ -128,26 +130,26 @@ def read(device):
 
 def write(device, data):
     try:
-        if constant.DEBUG:
+        if constant_rd.DEBUG:
             print(f'Opening device')
 
         hid_device = hid.device(device['vendor_id'], device['product_id'])
         hid_device.open_path(device['path'])
         hid_device.set_nonblocking(0)
 
-        if constant.DEBUG:
+        if constant_rd.DEBUG:
             print(f'Writing to device')
             print(f'Data: {data}')
 
         for block in data:
-            if constant.DEBUG:
+            if constant_rd.DEBUG:
                 print(f'Block: {block}')
 
             hid_device.write(block)
 
         hid_device.close()
 
-        if constant.DEBUG:
+        if constant_rd.DEBUG:
             print(f'Device closed')
 
     except IOError as io_error:
