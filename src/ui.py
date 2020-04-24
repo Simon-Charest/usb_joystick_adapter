@@ -26,9 +26,7 @@ def run():
 
     # Manage option menu
     devices = usb.get_devices([constant.VENDOR_ID, constant.BOOT_VENDOR_ID],
-                              [constant.PRODUCT_ID, constant.BOOT_PRODUCT_ID],
-                              [constant.MANUFACTURER_STRING, constant.BOOT_MANUFACTURER_STRING],
-                              [constant.PRODUCT_STRING, constant.BOOT_PRODUCT_STRING])
+                              [constant.PRODUCT_ID, constant.BOOT_PRODUCT_ID])
     device_names = usb.get_device_names(devices)
 
     # Display option menu

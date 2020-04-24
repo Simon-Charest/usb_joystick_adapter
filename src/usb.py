@@ -30,8 +30,8 @@ def get_device_names(devices):
     return device_names
 
 
-def get_devices(vendor_id, product_id, manufacturer_string, product_string):
-    hid_devices = hid.enumerate(0, 0)
+def get_devices(vendor_id, product_id):
+    hid_devices = get_all_devices()
 
     if constant.DEBUG:
         print(f'HID Devices: {hid_devices}')
@@ -111,7 +111,7 @@ def read(device):
         if constant.DEBUG:
             print(f'Reading from device')
 
-        integers = hid_device.read(1)  # TODO: Fix this
+        integers = hid_device.read(int('0x0', 16))  # TODO: Fix this
         hid_device.close()
 
         if constant.DEBUG:
