@@ -6,13 +6,8 @@ from tkinter import messagebox
 import constant_rd
 import hidapi_rd
 import io_rd
+import libusb_rd
 import pyusb_rd
-import usb
-import usb.core
-import usb.backend
-import usb.backend.libusb1 as libusb1
-import usb.backend.libusb0 as libusb0
-import usb.backend.openusb as openusb
 
 
 def run():
@@ -40,9 +35,9 @@ def run():
     device_name = StringVar(root)
 
     if constant_rd.DEBUG:
-        print(devices)
-        print(device_names)
-        print(device_name)
+        print(f'Devices: {devices}')
+        print(f'Device Names: {device_names}')
+        print(f'Device Name: {device_name}')
 
     device_option_menu = OptionMenu(root, device_name, *device_names)
     device_option_menu.config(width=35)
@@ -78,7 +73,10 @@ def run():
     """ Fourth row """
 
     # Display button
-    read_button = Button(root, text='Read Device', command=lambda: read_device(devices, device_name.get(), data_label))
+    read_button = Button(root, text='Read Device',
+                         # command=lambda: hidapi_rd.read_device(devices, device_name.get(), data_label))
+                         command=lambda: libusb_rd.read_device(devices, device_name.get(), data_label))
+                         # command=lambda: pyusb_rd.read_device(devices, device_name.get(), data_label))
     read_button.grid(row=3, column=0)
 
     # Display label
@@ -87,33 +85,6 @@ def run():
 
     # Redraw
     root.mainloop()
-
-
-def read_device(devices, device_name, data_label):
-    if device_name in ('', 'None'):
-        messagebox.showinfo('Information', 'Device must be selected.')
-
-        return
-
-    """ TODO: This is a test using HIDAPI (Input/Output Error Exception: read error) """
-
-    # # Get device by name
-    # device = hidapi_rd.get_device(devices, device_name)
-    #
-    # # Read data from device
-    # address = int('0000', 16)
-    # data = hidapi_rd.read(device, address)
-
-    """ TODO: This is a test using PyUSB (AttributeError: module 'usb.backend.openusb' has no attribute 'enumerate_devices') """
-
-    # Get device by name
-    device = usb.core.find(idVendor=constant_rd.BOOT_VENDOR_ID, idProduct=constant_rd.BOOT_PRODUCT_ID, backend=openusb)
-
-    # Read data from device
-    data = pyusb_rd.get_hid_report(device)
-
-    # Display data using a label
-    data_label['text'] = data
 
 
 def show_about(x=0, y=0):

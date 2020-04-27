@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # coding=utf-8
 
+from tkinter import *
+from tkinter import messagebox
 import constant_rd
 import hid  # Package: hidapi
 
@@ -126,6 +128,30 @@ def read(device, address):
 
     except ValueError as value_error:
         print(f'Value Error Exception: {value_error}')
+
+
+def read_device(devices, device_name, data_label):
+    if device_name in ('', 'None'):
+        messagebox.showinfo('Information', 'Device must be selected.')
+
+        return
+
+    """ TODO: This is a test using HIDAPI (Input/Output Error Exception: read error) """
+
+    # Get device by name
+    device = get_device(devices, device_name)
+
+    # Read data from device
+    address = int('0000', 16)
+    data = read(device, address)
+
+    if constant_rd.DEBUG:
+        print(f'Device: {device}')
+        print(f'Address: {address}')
+        print(f'Data: {data}')
+
+    # Display data using a label
+    data_label['text'] = data
 
 
 def write(device, data):
