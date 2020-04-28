@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # coding=utf-8
 
-from tkinter import *
 from tkinter import messagebox
 import constant_rd
 import hid  # Package: hidapi
+import keyboard
 
 
 def get_all_devices():
@@ -152,6 +152,51 @@ def read_device(devices, device_name, data_label):
 
     # Display data using a label
     data_label['text'] = data
+
+
+def test(devices, device_name, data_label):
+    if device_name in ('', 'None'):
+        messagebox.showinfo('Information', 'Device must be selected.')
+
+        return
+
+    device = get_device(devices, device_name)  # Get device by name
+    hid_device = hid.device()
+    hid_device.open(device['vendor_id'], device['product_id'])
+
+    try:
+        # TODO: Fix test release
+        while not keyboard.is_pressed('escape'):
+            data = hid_device.read(16)
+            action = []
+
+            # Atari 2600 CX40 Joystick
+
+            if data[0] == 0:
+                action += 'L'
+
+            if data[0] == 255:
+                action += 'R'
+
+            if data[1] == 0:
+                action += 'U'
+
+            if data[1] == 255:
+                action += 'D'
+
+            if data[2] == 1:
+                action += '1'
+
+            string = f'Data: {data}, Action: {action}'
+
+            if constant_rd.DEBUG:
+                print(string)
+
+            # Display data using a label (TODO: Fix display updating)
+            data_label['text'] = string
+
+    finally:
+        hid_device.close()
 
 
 def write(device, data):

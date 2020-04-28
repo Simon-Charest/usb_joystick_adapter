@@ -6,8 +6,6 @@ from tkinter import messagebox
 import constant_rd
 import hidapi_rd
 import io_rd
-import libusb_rd
-import pyusb_rd
 
 
 def run():
@@ -73,11 +71,9 @@ def run():
     """ Fourth row """
 
     # Display button
-    read_button = Button(root, text='Read Device',
-                         # command=lambda: hidapi_rd.read_device(devices, device_name.get(), data_label))
-                         command=lambda: libusb_rd.read_device(devices, device_name.get(), data_label))
-                         # command=lambda: pyusb_rd.read_device(devices, device_name.get(), data_label))
-    read_button.grid(row=3, column=0)
+    test_button = Button(root, text='Test Device',
+                         command=lambda: hidapi_rd.test(devices, device_name.get(), data_label))
+    test_button.grid(row=3, column=0)
 
     # Display label
     data_label = Label(root, text='')

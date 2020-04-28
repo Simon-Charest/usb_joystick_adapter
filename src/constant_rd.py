@@ -45,6 +45,12 @@ __credits__ = [
         'https://pypi.org/project/libusb/'
     ],
     [
+        'Chris Liechti',
+        'pySerial',
+        'cliechti@gmx.net',
+        'https://github.com/pyserial/pyserial'
+    ],
+    [
         'Wander Lairson Costa',
         'PyUSB',
         'wcosta@mozilla.com',
