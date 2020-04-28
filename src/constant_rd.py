@@ -35,27 +35,6 @@ __credits__ = [
         'https://github.com/gbishop',
         'https://twitter.com/gbishop',
         'http://www.cs.unc.edu/~gb/'
-    ],
-    [
-        'Adam Karpierz',
-        'libusb',
-        'adam@karpierz.net',
-        'https://github.com/karpierz',
-        'https://www.linkedin.com/in/adam-karpierz/',
-        'https://pypi.org/project/libusb/'
-    ],
-    [
-        'Chris Liechti',
-        'pySerial',
-        'cliechti@gmx.net',
-        'https://github.com/pyserial/pyserial'
-    ],
-    [
-        'Wander Lairson Costa',
-        'PyUSB',
-        'wcosta@mozilla.com',
-        'https://br.linkedin.com/in/walac',
-        'https://walac.github.io'
     ]
 ]
 __license__ = 'GNU'
