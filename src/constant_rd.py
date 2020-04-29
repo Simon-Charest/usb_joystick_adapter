@@ -57,5 +57,3 @@ BOOT_PRODUCT_STRING = 'HIDBoot'
 
 FIRMWARE = '../bin/*.hex'
 ICON = '../img/1f579.png'
-
-

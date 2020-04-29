@@ -37,7 +37,12 @@ def run():
         print(f'Device Names: {device_names}')
         print(f'Device Name: {device_name}')
 
-    device_option_menu = OptionMenu(root, device_name, *device_names)
+    if device_names:
+        device_option_menu = OptionMenu(root, device_name, *device_names)
+
+    else:
+        device_option_menu = OptionMenu(root, device_name, device_names)
+
     device_option_menu.config(width=35)
     device_option_menu.grid(row=0, column=1, sticky=E)
 
@@ -57,7 +62,13 @@ def run():
 
     # Display option menu
     file_name = StringVar(root)
-    file_option_menu = OptionMenu(root, file_name, *file_names)
+
+    if file_names:
+        file_option_menu = OptionMenu(root, file_name, *file_names)
+
+    else:
+        file_option_menu = OptionMenu(root, file_name, file_names)
+
     file_option_menu.config(width=35)
     file_option_menu.grid(row=1, column=1, sticky=E)
 
