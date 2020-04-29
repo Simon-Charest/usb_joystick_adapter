@@ -8,11 +8,14 @@ import keyboard
 
 
 def get_all_devices():
-    # Loop on all Universal Serial Bus (USB) Human Interface Devices (HID)
+    """ Get all Universal Serial Bus (USB) Human Interface Devices (HID) """
+
     return hid.enumerate(0, 0)
 
 
 def get_device(devices, device_name):
+    """ Get device by its unique identifier """
+
     for device in devices:
         if get_identifier(device['path']) in device_name:
             return device
@@ -21,6 +24,8 @@ def get_device(devices, device_name):
 
 
 def get_device_names(devices):
+    """ Get device names, with identifiers (ex: 'Atari C64 Amiga Joystick v3.2 (8bf7757)') """
+
     if not devices:
         return None
 
@@ -32,7 +37,9 @@ def get_device_names(devices):
     return device_names
 
 
-def get_devices(vendor_id, product_id):
+def get_devices(vendor_ids, product_ids):
+    """ Return all devices which fit the vendor_ids and product_ids """
+
     hid_devices = get_all_devices()
 
     if constant_rd.DEBUG:
@@ -45,13 +52,15 @@ def get_devices(vendor_id, product_id):
         if constant_rd.DEBUG:
             print(f'HID Device: {hid_device}')
 
-        if hid_device['vendor_id'] in vendor_id and hid_device['product_id'] in product_id:
+        if hid_device['vendor_id'] in vendor_ids and hid_device['product_id'] in product_ids:
             devices.append(hid_device)
 
     return devices
 
 
 def get_file(files, file_name):
+    """ Get file name by its unique identifier """
+
     for file in files:
         if file_name in file:
             return file
@@ -60,6 +69,8 @@ def get_file(files, file_name):
 
 
 def get_identifier(path):
+    """ Return unique identifier from device's path (ex: 8bf7757) """
+
     string = path.decode()  # Convert bytes to string
     paths = string.split('#')
     identifiers = paths[2].split('&')
@@ -76,7 +87,10 @@ def get_identifier(path):
 
 
 def get_manufacturer_string(device):
-    # Patches a bug in the hardware which prevents the manufacturer_string to be read correctly upon plugging the device
+    """
+        Get manufacturer name (ex: retronicdesign.com)
+        Patches a bug in the hardware which prevents the manufacturer_string to be read correctly upon plugging the device
+    """
 
     if device['manufacturer_string']:
         return device['manufacturer_string']
@@ -89,7 +103,10 @@ def get_manufacturer_string(device):
 
 
 def get_product_string(device):
-    # Patches a bug in the hardware which prevents the product_string to be read correctly upon plugging the device
+    """
+        Get product name (ex: Atari C64 Amiga Joystick v3.2)
+        Patches a bug in the hardware which prevents the product_string to be read correctly upon plugging the device
+    """
 
     if device['product_string']:
         return device['product_string']
@@ -101,60 +118,9 @@ def get_product_string(device):
         return constant_rd.BOOT_PRODUCT_STRING
 
 
-def read(device, address):
-    try:
-        if constant_rd.DEBUG:
-            print(f'Opening device')
+def read(devices, device_name, data_label):
+    """ Read data from device """
 
-        hid_device = hid.device(device['vendor_id'], device['product_id'])
-        hid_device.open_path(device['path'])
-        hid_device.set_nonblocking(1)
-
-        if constant_rd.DEBUG:
-            print(f'Reading from device')
-
-        # TODO: Fix this
-        integers = hid_device.read(address)
-
-        hid_device.close()
-
-        if constant_rd.DEBUG:
-            print(f'Device closed')
-
-        return integers
-
-    except IOError as io_error:
-        print(f'Input/Output Error Exception: {io_error}')
-
-    except ValueError as value_error:
-        print(f'Value Error Exception: {value_error}')
-
-
-def read_device(devices, device_name, data_label):
-    if device_name in ('', 'None'):
-        messagebox.showinfo('Information', 'Device must be selected.')
-
-        return
-
-    """ TODO: This is a test using HIDAPI (Input/Output Error Exception: read error) """
-
-    # Get device by name
-    device = get_device(devices, device_name)
-
-    # Read data from device
-    address = int('0000', 16)
-    data = read(device, address)
-
-    if constant_rd.DEBUG:
-        print(f'Device: {device}')
-        print(f'Address: {address}')
-        print(f'Data: {data}')
-
-    # Display data using a label
-    data_label['text'] = data
-
-
-def test(devices, device_name, data_label):
     if device_name in ('', 'None'):
         messagebox.showinfo('Information', 'Device must be selected.')
 
@@ -165,7 +131,54 @@ def test(devices, device_name, data_label):
     hid_device.open(device['vendor_id'], device['product_id'])
 
     try:
-        # TODO: Fix test release
+        if constant_rd.DEBUG:
+            print(f'Opening device')
+
+        hid_device = hid.device(device['vendor_id'], device['product_id'])
+        hid_device.open_path(device['path'])
+        hid_device.set_nonblocking(1)
+
+        if constant_rd.DEBUG:
+            print(f'Device: {device}')
+            print(f'HID Device: {hid_device}')
+            print(f'Reading from device')
+
+        # Read data from device (TODO: Dev/fix this)
+        for address in range(0, 32512, 16):
+            data = hid_device.read(address)
+            print(f'Read: [Block: {int(address / 16)}, Address: {address}, Data: {data}]')
+
+        hid_device.close()
+
+        if constant_rd.DEBUG:
+            print(f'Device closed')
+
+        # Display data using a label
+        data_label['text'] = data
+
+        return data
+
+    except IOError as io_error:
+        print(f'Input/Output Error Exception: {io_error}')
+
+    except ValueError as value_error:
+        print(f'Value Error Exception: {value_error}')
+
+
+def test(devices, device_name, data_label):
+    """ Let the user perform a joystick test """
+
+    if device_name in ('', 'None'):
+        messagebox.showinfo('Information', 'Device must be selected.')
+
+        return
+
+    device = get_device(devices, device_name)  # Get device by name
+    hid_device = hid.device()
+    hid_device.open(device['vendor_id'], device['product_id'])
+
+    try:
+        # TODO: Fix test release (currently needs to hold escape key while using joystick)
         while not keyboard.is_pressed('escape'):
             data = hid_device.read(16)
             action = []
@@ -192,7 +205,8 @@ def test(devices, device_name, data_label):
             if constant_rd.DEBUG:
                 print(string)
 
-            # Display data using a label (TODO: Fix display updating)
+            # Display data using a label
+            # TODO: Fix display updating (currently only updates UI when exiting loop)
             data_label['text'] = string
 
     finally:
@@ -200,6 +214,8 @@ def test(devices, device_name, data_label):
 
 
 def write(device, data):
+    """ Write data to device """
+
     try:
         if constant_rd.DEBUG:
             print(f'Opening device')

@@ -76,7 +76,7 @@ def run():
 
     # Display button
     update_button = Button(root, text='Update Device',
-                           command=lambda: update_device(devices, device_name.get(), files, file_name.get()))
+                           command=lambda: update(devices, device_name.get(), files, file_name.get()))
     update_button.grid(row=2, column=1, sticky=E)
 
     """ Fourth row """
@@ -86,9 +86,16 @@ def run():
                          command=lambda: hidapi_rd.test(devices, device_name.get(), data_label))
     test_button.grid(row=3, column=0)
 
+    # Display button
+    read_button = Button(root, text='Read Device',
+                         command=lambda: hidapi_rd.read(devices, device_name.get(), data_label))
+    read_button.grid(row=3, column=1, sticky=W)
+
+    """ Fifth row """
+
     # Display label
     data_label = Label(root, text='')
-    data_label.grid(row=3, column=1, columnspan=2)
+    data_label.grid(row=4, column=0, columnspan=3)
 
     # Redraw
     root.mainloop()
@@ -119,7 +126,7 @@ def show_about(x=0, y=0):
     ok_button.grid(row=1, column=0)
 
 
-def update_device(devices, device_name, files, file_name):
+def update(devices, device_name, files, file_name):
     if device_name in ('', 'None') or file_name in ('', 'None'):
         messagebox.showinfo('Information', 'Device and configuration must be selected.')
 
