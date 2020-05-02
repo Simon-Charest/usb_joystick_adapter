@@ -1,11 +1,8 @@
-#!/usr/bin/python
-# coding=utf-8
-
-import datetime_rd
+from src.datetime_ import datetime
 
 __author__ = 'Retronic Design'
 __email__ = 'info@retronicdesign.com'
-__copyright__ = f'Copyright © {datetime_rd.get_years(2012)} {__author__} <{__email__}>. All rights reserved.'
+__copyright__ = f'Copyright © {datetime.get_years(2012)} {__author__} <{__email__}>. All rights reserved.'
 __credits__ = [
     [
         'Francis-Olivier Gradel, Eng.',
@@ -43,8 +40,6 @@ __project__ = 'USB Joystick Adapter'
 __status__ = 'Developement'
 __version__ = '4.0.0'
 
-DEBUG = True
-
 VENDOR_ID = 0x810  # 0x810, 2064, 0b100000010000
 PRODUCT_ID = 0xE501  # 0xE501, 58625, 0b1110010100000001
 MANUFACTURER_STRING = 'retronicdesign.com'
@@ -55,5 +50,6 @@ BOOT_PRODUCT_ID = 0x5DF  # 0x5DF, 1503, 0b10111011111
 BOOT_MANUFACTURER_STRING = 'obdev.at'
 BOOT_PRODUCT_STRING = 'HIDBoot'
 
+DEBUG = True
 FIRMWARE = '../bin/*.hex'
 ICON = '../img/1f579.png'

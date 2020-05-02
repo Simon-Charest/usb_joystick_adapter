@@ -1,0 +1,4 @@
+hidapi
+keyboard
+pip
+setuptools
