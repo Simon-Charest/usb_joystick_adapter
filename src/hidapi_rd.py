@@ -4,6 +4,7 @@
 from tkinter import messagebox
 import constant_rd
 import hid  # Package: hidapi
+import io_rd
 import keyboard
 
 
@@ -213,9 +214,21 @@ def test(devices, device_name, data_label):
         hid_device.close()
 
 
-def write(device, data):
-    """ Write data to device """
+def write(files, file_name, devices, device_name):
+    if file_name in ('', 'None') or device_name in ('', 'None'):
+        messagebox.showinfo('Information', 'Configuration and device must be selected.')
 
+        return
+
+    # Get data from Intel HEX file
+    file = get_file(files, file_name)
+    intel_hex = io_rd.get_intel_hex(file)
+    data = io_rd.get_data(intel_hex)
+
+    # Get device by name
+    device = get_device(devices, device_name)
+
+    # Write data to device
     try:
         if constant_rd.DEBUG:
             print(f'Opening device')
@@ -244,3 +257,5 @@ def write(device, data):
 
     except ValueError as value_error:
         print(f'Value Error Exception: {value_error}')
+
+    messagebox.showinfo('Success', 'Successfully written configuration to device.')

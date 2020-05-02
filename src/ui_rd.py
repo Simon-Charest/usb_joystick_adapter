@@ -2,7 +2,6 @@
 # coding=utf-8
 
 from tkinter import *
-from tkinter import messagebox
 import constant_rd
 import hidapi_rd
 import io_rd
@@ -11,18 +10,42 @@ import io_rd
 def run():
     # Display application
     root = Tk()
-    root.columnconfigure(0, weight=1)
-    root.columnconfigure(1, weight=1)
-    root.columnconfigure(2, weight=1)
-    root.geometry('400x300')
-    root.tk.call('wm', 'iconphoto', root._w, PhotoImage(file=constant_rd.ICON))
+    root.geometry('500x300')
+    root.resizable(0, 0)  # Prevent resizability and disable maximize button
     root.title(constant_rd.__project__)
+    root.tk.call('wm', 'iconphoto', root._w, PhotoImage(file=constant_rd.ICON))
 
     """ First row """
 
     # Display label
+    devices_label = Label(root, text='Configuration:')
+    devices_label.grid(row=0, column=0, sticky=W)
+
+    # Manage option menu
+    files = io_rd.get_files(constant_rd.FIRMWARE)
+    file_names = io_rd.get_file_names(files)
+
+    # Display option menu
+    file_name = StringVar(root)
+
+    if file_names:
+        file_option_menu = OptionMenu(root, file_name, *file_names)
+
+    else:
+        file_option_menu = OptionMenu(root, file_name, file_names)
+
+    file_option_menu.config(width=35)
+    file_option_menu.grid(row=0, column=1, sticky=W)
+
+    # Display button
+    about_button = Button(root, text='About', command=lambda: show_about(root.winfo_rootx(), root.winfo_rooty()))
+    about_button.grid(row=0, column=3, sticky=W)
+
+    """ Second row """
+
+    # Display label
     devices_label = Label(root, text='Device:')
-    devices_label.grid(row=0, column=0)
+    devices_label.grid(row=1, column=0, sticky=W)
 
     # Manage option menu
     devices = hidapi_rd.get_devices([constant_rd.VENDOR_ID, constant_rd.BOOT_VENDOR_ID],
@@ -44,68 +67,48 @@ def run():
         device_option_menu = OptionMenu(root, device_name, device_names)
 
     device_option_menu.config(width=35)
-    device_option_menu.grid(row=0, column=1, sticky=E)
-
-    # Display button
-    about_button = Button(root, text='About', command=lambda: show_about(root.winfo_rootx(), root.winfo_rooty()))
-    about_button.grid(row=0, column=2)
-
-    """ Second row """
-
-    # Display label
-    devices_label = Label(root, text='Configuration:')
-    devices_label.grid(row=1, column=0)
-
-    # Manage option menu
-    files = io_rd.get_files(constant_rd.FIRMWARE)
-    file_names = io_rd.get_file_names(files)
-
-    # Display option menu
-    file_name = StringVar(root)
-
-    if file_names:
-        file_option_menu = OptionMenu(root, file_name, *file_names)
-
-    else:
-        file_option_menu = OptionMenu(root, file_name, file_names)
-
-    file_option_menu.config(width=35)
-    file_option_menu.grid(row=1, column=1, sticky=E)
+    device_option_menu.grid(row=1, column=1, sticky=W)
 
     """ Third row """
+    action = StringVar()
+    action.set('r')
+
+    # Display radio button
+    Radiobutton(root, text='Read', variable=action, value='r').grid(row=2, column=0)
+    Radiobutton(root, text='Test', variable=action, value='t').grid(row=2, column=1)
+    Radiobutton(root, text='Write', variable=action, value='w').grid(row=2, column=2)
 
     # Display button
-    update_button = Button(root, text='Update Device',
-                           command=lambda: update(devices, device_name.get(), files, file_name.get()))
-    update_button.grid(row=2, column=1, sticky=E)
+    ok_button = Button(root, text='OK',
+                       command=lambda: execute(action.get(), files, file_name.get(), devices, device_name.get(), data_label))
+    ok_button.grid(row=2, column=3, sticky=W)
 
     """ Fourth row """
 
-    # Display button
-    test_button = Button(root, text='Test Device',
-                         command=lambda: hidapi_rd.test(devices, device_name.get(), data_label))
-    test_button.grid(row=3, column=0)
-
-    # Display button
-    read_button = Button(root, text='Read Device',
-                         command=lambda: hidapi_rd.read(devices, device_name.get(), data_label))
-    read_button.grid(row=3, column=1, sticky=W)
-
-    """ Fifth row """
-
     # Display label
     data_label = Label(root, text='')
-    data_label.grid(row=4, column=0, columnspan=3)
+    data_label.grid(row=3, column=0, columnspan=3, sticky=W)
 
     # Redraw
     root.mainloop()
+
+
+def execute(action, files, file_name, devices, device_name, data_label):
+    if action == 'r':
+        hidapi_rd.read(devices, device_name, data_label)
+
+    elif action == 't':
+        hidapi_rd.test(devices, device_name, data_label)
+
+    elif action == 'w':
+        hidapi_rd.write(files, file_name, devices, device_name)
 
 
 def show_about(x=0, y=0):
     # Display form
     top_level = Toplevel()
     top_level.grab_set()
-    top_level.resizable(0, 0)  # Remove maximize button
+    top_level.resizable(0, 0)  # Prevent resizability and disable maximize button
     top_level.wm_title(f'About {constant_rd.__project__}')
     top_level.geometry(f'+{x}+{y}')
 
@@ -124,23 +127,3 @@ def show_about(x=0, y=0):
     # Display button
     ok_button = Button(top_level, text='OK', command=top_level.destroy)
     ok_button.grid(row=1, column=0)
-
-
-def update(devices, device_name, files, file_name):
-    if device_name in ('', 'None') or file_name in ('', 'None'):
-        messagebox.showinfo('Information', 'Device and configuration must be selected.')
-
-        return
-
-    # Get device by name
-    device = hidapi_rd.get_device(devices, device_name)
-
-    # Get data from Intel HEX file
-    file = hidapi_rd.get_file(files, file_name)
-    intel_hex = io_rd.get_intel_hex(file)
-    data = io_rd.get_data(intel_hex)
-
-    # Write data to device
-    hidapi_rd.write(device, data)
-
-    messagebox.showinfo('Success', 'Configuration written to device successfully.')
