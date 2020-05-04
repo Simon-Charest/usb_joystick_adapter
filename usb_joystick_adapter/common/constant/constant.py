@@ -63,6 +63,12 @@ ADAPTOR = {
         'product_string': 'Atari C64 Amiga Joystick v3.1'
     }
 }
+# ARGV_OVERRIDE = 'usb_joystick_adapter.py -c:"Atari_C64_Amiga_Joystick_v3.1" -d:"25d1adf4" -w'
+# ARGV_OVERRIDE = 'usb_joystick_adapter.py -d:"25d1adf4" -r'
+# ARGV_OVERRIDE = 'usb_joystick_adapter.py -d:"25d1adf4" -t'
+ARGV_OVERRIDE = 'usb_joystick_adapter.py -g'
+# ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:c'
+# ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:d'
 DEBUG = True
 FIRMWARE = 'data/*.hex'
 ICON = 'resources/1f579.png'
