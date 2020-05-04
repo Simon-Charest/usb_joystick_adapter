@@ -3,53 +3,66 @@ from src.datetime_ import datetime
 __author__ = 'Retronic Design'
 __email__ = 'info@retronicdesign.com'
 __copyright__ = f'Copyright © {datetime.get_years(2012)} {__author__} <{__email__}>. All rights reserved.'
-__credits__ = [
-    [
-        'Francis-Olivier Gradel, Eng.',
-        'Retronic Design',
-        'info@retronicdesign.com',
-        'https://www.ebay.com/usr/retronicdesign',
-        'https://www.facebook.com/retronicdesign',
-        'https://ca.linkedin.com/in/francis-gradel-ing-b620591a',
-        'https://twitter.com/fogradel',
-        'retronicdesign.com',
-        'https://atariage.com/forums/profile/37766-nitz1976/'
-    ],
-    [
-        'Simon Charest',
-        'SLCIT, Inc.',
-        'simoncharest@gmail.com',
-        'simoncharest@retronicdesign.com',
-        'https://www.facebook.com/simon.charest/',
-        'https://github.com/Simon-Charest',
-        'https://www.linkedin.com/in/simoncharest/',
-        'https://twitter.com/scharest'
-    ],
-    [
-        'Gary Bishop',
-        'HIDAPI',
-        'gb@cs.unc.edu',
-        'https://github.com/gbishop',
-        'https://twitter.com/gbishop',
-        'http://www.cs.unc.edu/~gb/'
-    ]
-]
+__project__ = 'USB Joystick Adapter'
+__credits__ = {
+    'Francis-Olivier Gradel, Eng.': {
+        'organization': f'{__author__}',
+        'product': f'{__project__}',
+        'email': f'{__email__}',
+        'eBay': 'https://www.ebay.com/usr/retronicdesign',
+        'Facebook': 'https://www.facebook.com/retronicdesign',
+        'LinkedIn': 'https://ca.linkedin.com/in/francis-gradel-ing-b620591a',
+        'Twitter': 'https://twitter.com/fogradel',
+        'Website': 'retronicdesign.com',
+        'AtariAge': 'https://atariage.com/forums/profile/37766-nitz1976/'
+       },
+    'Simon Charest': {
+        'organization': ['SLCIT, Inc.', 'Retronic Design'],
+        'email': ['simoncharest@gmail.com', 'simoncharest@retronicdesign.com'],
+        'Facebook': 'https://www.facebook.com/simon.charest/',
+        'GitHub': 'https://github.com/Simon-Charest',
+        'LinkedIn': 'https://www.linkedin.com/in/simoncharest/',
+        'Twitter': 'https://twitter.com/scharest'
+    },
+    'Gary Bishop': {
+        'organization': 'University of North Carolina - Computer Science',
+        'product': 'HIDAPI',
+        'email': 'gb@cs.unc.edu',
+        'GitHub': 'https://github.com/gbishop',
+        'Twitter': 'https://twitter.com/gbishop',
+        'Website': 'http://www.cs.unc.edu/~gb/'
+    }
+}
 __license__ = 'GNU'
 __maintainer__ = 'Francis-Olivier Gradel, Eng. and Simon Charest'
-__project__ = 'USB Joystick Adapter'
 __status__ = 'Developement'
 __version__ = '4.0.0'
 
-VENDOR_ID = 0x810  # 0x810, 2064, 0b100000010000
-PRODUCT_ID = 0xE501  # 0xE501, 58625, 0b1110010100000001
-MANUFACTURER_STRING = 'retronicdesign.com'
-PRODUCT_STRING = 'Atari C64 Amiga Joystick v3.1'
-
-BOOT_VENDOR_ID = 0x16C0  # 0x16C0, 5824, 0b1011011000000
-BOOT_PRODUCT_ID = 0x5DF  # 0x5DF, 1503, 0b10111011111
-BOOT_MANUFACTURER_STRING = 'obdev.at'
-BOOT_PRODUCT_STRING = 'HIDBoot'
-
+ABOUT = f'{__project__}\n' \
+        f'Version {__version__}\n' \
+        f'{__copyright__}\n' \
+        f'\n' \
+        f'The {__project__} and its software are the propriety of ' \
+        f'{__author__}.\n' \
+        f'The hardware is sold without any warranty. The software is open-source and ' \
+        f'provided free of charge.\n' \
+        f'Both are to be used with specific devices with DB9 connectors.\n' \
+        f'\n' \
+        f'This product is license under the {__license__} License Terms.'
+ADAPTOR = {
+    'boot': {
+        'vendor_id': 0x16C0,  # hex: 0x16C0, int: 5824, bin: 0b1011011000000
+        'product_id': 0x5DF,  # hex: 0x5DF, int: 1503, bin: 0b10111011111
+        'manufacturer_string': 'obdev.at',
+        'product_string': 'HIDBoot'
+    },
+    'operation': {
+        'vendor_id': 0x810,  # hex: 0x810, int: 2064, bin: 0b100000010000
+        'product_id': 0xE501,  # hex: 0xE501, int: 58625, bin: 0b1110010100000001
+        'manufacturer_string': 'retronicdesign.com',
+        'product_string': 'Atari C64 Amiga Joystick v3.1'
+    }
+}
 DEBUG = True
 FIRMWARE = '../bin/*.hex'
 ICON = '../img/1f579.png'

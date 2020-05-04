@@ -3,20 +3,26 @@ from src.io_ import io
 from src.usb import usb
 from tkinter import *
 
+# Constants
+LABEL_COLUMN = 0
+CONTROL_COLUMN = 1
+BUTTON_COLUMN = 2
+OPTION_MENU_WIDTH = 35
+
 
 def execute():
     # Display application
     root = Tk()
-    root.geometry('500x300')
-    root.resizable(0, 0)  # Prevent resizability and disable maximize button
+    root.geometry('400x300')
+    root.resizable(0, 0)  # Prevent resizing and disable maximize button
     root.title(constant.__project__)
-    root.tk.call('wm', 'iconphoto', root._w, PhotoImage(file=constant.ICON))
+    root.tk.call('wm', 'iconphoto', root.w, PhotoImage(file=constant.ICON))
 
     """ First row """
 
     # Display label
     devices_label = Label(root, text='Configuration:')
-    devices_label.grid(row=0, column=0, sticky=W)
+    devices_label.grid(row=0, column=LABEL_COLUMN, sticky=NW)
 
     # Manage option menu
     files = io.get_files(constant.FIRMWARE)
@@ -31,22 +37,29 @@ def execute():
     else:
         file_option_menu = OptionMenu(root, file_name, file_names)
 
-    file_option_menu.config(width=35)
-    file_option_menu.grid(row=0, column=1, sticky=W)
+    file_option_menu.config(width=OPTION_MENU_WIDTH)
+    file_option_menu.grid(row=0, column=CONTROL_COLUMN, sticky=NW)
 
     # Display button
     about_button = Button(root, text='About', command=lambda: show_about(root.winfo_rootx(), root.winfo_rooty()))
-    about_button.grid(row=0, column=3, sticky=W)
+    about_button.grid(row=0, column=BUTTON_COLUMN, sticky=NW)
 
     """ Second row """
 
     # Display label
     devices_label = Label(root, text='Device:')
-    devices_label.grid(row=1, column=0, sticky=W)
+    devices_label.grid(row=1, column=LABEL_COLUMN, sticky=NW)
 
     # Manage option menu
-    devices = usb.get_devices([constant.VENDOR_ID, constant.BOOT_VENDOR_ID],
-                                 [constant.PRODUCT_ID, constant.BOOT_PRODUCT_ID])
+    modes = constant.ADAPTOR.keys()
+    vendor_ids = list()
+    product_ids = list()
+
+    for mode in modes:
+        vendor_ids.append(constant.ADAPTOR[mode]['vendor_id'])
+        product_ids.append(constant.ADAPTOR[mode]['product_id'])
+
+    devices = usb.get_devices(vendor_ids, product_ids)
     device_names = usb.get_device_names(devices)
 
     # Display option menu
@@ -63,29 +76,44 @@ def execute():
     else:
         device_option_menu = OptionMenu(root, device_name, device_names)
 
-    device_option_menu.config(width=35)
-    device_option_menu.grid(row=1, column=1, sticky=W)
+    device_option_menu.config(width=OPTION_MENU_WIDTH)
+    device_option_menu.grid(row=1, column=CONTROL_COLUMN, sticky=NW)
 
     """ Third row """
-    action = StringVar()
-    action.set('r')
+
+    # Display label
+    status_label = Label(root, text='Action:')
+    status_label.grid(row=2, column=LABEL_COLUMN, sticky=NW)
+
+    # Create frame to pack radio buttons inside a single grid cell
+    action_frame = Frame(root)
+    action_frame.grid(row=2, column=CONTROL_COLUMN, sticky=NW)
 
     # Display radio button
-    Radiobutton(root, text='Read', variable=action, value='r').grid(row=2, column=0)
-    Radiobutton(root, text='Test', variable=action, value='t').grid(row=2, column=1)
-    Radiobutton(root, text='Write', variable=action, value='w').grid(row=2, column=2)
+    action = StringVar()
+    action.set('r')
+    read_radiobutton = Radiobutton(action_frame, text='Read', variable=action, value='r')
+    read_radiobutton.pack(side=LEFT)
+    test_radiobutton = Radiobutton(action_frame, text='Test', variable=action, value='t')
+    test_radiobutton.pack(side=LEFT)
+    write_radiobutton = Radiobutton(action_frame, text='Write', variable=action, value='w')
+    write_radiobutton.pack(side=LEFT)
 
     # Display button
     ok_button = Button(root, text='OK',
                        command=lambda: select(action.get(), files, file_name.get(), devices, device_name.get(),
                                               data_label))
-    ok_button.grid(row=2, column=3, sticky=W)
+    ok_button.grid(row=2, column=BUTTON_COLUMN, sticky=NW)
 
     """ Fourth row """
 
     # Display label
-    data_label = Label(root, text='')
-    data_label.grid(row=3, column=0, columnspan=3, sticky=W)
+    status_label = Label(root, text='Status:')
+    status_label.grid(row=3, column=LABEL_COLUMN, sticky=NW)
+
+    # Display label
+    data_label = Label(root, text='', borderwidth='1', relief='ridge', height=10)
+    data_label.grid(row=3, column=CONTROL_COLUMN, columnspan=3, sticky=NSEW)
 
     # Redraw
     root.mainloop()
@@ -111,19 +139,9 @@ def show_about(x=0, y=0):
     top_level.geometry(f'+{x}+{y}')
 
     # Display label
-    about_label = Label(top_level, text=f'{constant.__project__}\n'
-                                        f'Version {constant.__version__}\n'
-                                        f'{constant.__copyright__}\n'
-                                        f'\n'
-                                        f'The {constant.__project__} and its software are the propriety of '
-                                        f'{constant.__author__}.\n'
-                                        f'The hardware is sold without any warranty. The software is open-source and '
-                                        f'provided free of charge.\n'
-                                        f'Both are to be used with specific devices with DB9 connectors.\n'
-                                        f'\n'
-                                        f'This product is license under the {constant.__license__} License Terms.')
+    about_label = Label(top_level, text=constant.ABOUT)
     about_label.grid()
 
     # Display button
     ok_button = Button(top_level, text='OK', command=top_level.destroy)
-    ok_button.grid(row=1, column=0)
+    ok_button.grid(row=1, column=LABEL_COLUMN)
