@@ -51,14 +51,14 @@ ABOUT = f'{__project__}\n' \
         f'This product is license under the {__license__} License Terms.'
 ADAPTOR = {
     'boot': {
-        'vendor_id': 0x16C0,  # hex: 0x16C0, int: 5824, bin: 0b1011011000000
-        'product_id': 0x5DF,  # hex: 0x5DF, int: 1503, bin: 0b10111011111
+        'vendor_id': 0x16C0,  # hex: 0x16C0, int: 5824, bin: 0001 0110 1100 0000
+        'product_id': 0x5DF,  # hex: 0x5DF, int: 1503, bin: 0101 1101 1111
         'manufacturer_string': 'obdev.at',
         'product_string': 'HIDBoot'
     },
     'operation': {
-        'vendor_id': 0x810,  # hex: 0x810, int: 2064, bin: 0b100000010000
-        'product_id': 0xE501,  # hex: 0xE501, int: 58625, bin: 0b1110010100000001
+        'vendor_id': 0x810,  # hex: 0x810, int: 2064, bin: 1000 0001 0000
+        'product_id': 0xE501,  # hex: 0xE501, int: 58625, bin: 1110 0101 0000 0001
         'manufacturer_string': 'retronicdesign.com',
         'product_string': 'Atari C64 Amiga Joystick v3.1'
     }
@@ -69,6 +69,13 @@ ADAPTOR = {
 ARGV_OVERRIDE = 'usb_joystick_adapter.py -g'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:c'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:d'
+BOOT_LOAD_HID = "'C:/src/usb_joystick_adapter-git/etc/bootloadhid/bootloadHID.exe' -r " \
+                "'C:/src/usb_joystick_adapter-git/usb_joystick_adapter/data/Atari_C64_Amiga_Joystick_v3.1.hex'"
 DEBUG = True
+DEVICE_SIZE = 32768  # hex: 0x8000, int: 32768, bin: ‭1000 0000 0000 0000
 FIRMWARE = 'data/*.hex'
 ICON = 'resources/1f579.png'
+PAGE_SIZE = 128  # hex: 0x80, int: 128, bin: 1000 0000
+UPLOADING = 32640  # hex: 0x7f80, int: 32640, bin: 0111 1111 1000 0000
+
+

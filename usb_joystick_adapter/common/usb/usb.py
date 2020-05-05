@@ -93,11 +93,13 @@ def get_manufacturer_string(device):
     if device['manufacturer_string']:
         return device['manufacturer_string']
 
-    elif device['vendor_id'] == constant.VENDOR_ID and device['product_id'] == constant.PRODUCT_ID:
-        return constant.MANUFACTURER_STRING
+    elif device['vendor_id'] == constant.ADAPTOR['boot']['vendor_id'] and \
+            device['product_id'] == constant.ADAPTOR['boot']['product_id']:
+        return constant.ADAPTOR['boot']['manufacturer_string']
 
-    elif device['vendor_id'] == constant.BOOT_VENDOR_ID and device['product_id'] == constant.BOOT_PRODUCT_ID:
-        return constant.BOOT_MANUFACTURER_STRING
+    elif device['vendor_id'] == constant.ADAPTOR['operation']['vendor_id'] and \
+            device['product_id'] == constant.ADAPTOR['operation']['product_id']:
+        return constant.ADAPTOR['operation']['manufacturer_string']
 
 
 def get_product_string(device):
@@ -109,11 +111,13 @@ def get_product_string(device):
     if device['product_string']:
         return device['product_string']
 
-    elif device['vendor_id'] == constant.VENDOR_ID and device['product_id'] == constant.PRODUCT_ID:
-        return constant.PRODUCT_STRING
+    elif device['vendor_id'] == constant.ADAPTOR['boot']['vendor_id'] and \
+            device['product_id'] == constant.ADAPTOR['boot']['product_id']:
+        return constant.ADAPTOR['boot']['product_string']
 
-    elif device['vendor_id'] == constant.BOOT_VENDOR_ID and device['product_id'] == constant.BOOT_PRODUCT_ID:
-        return constant.BOOT_PRODUCT_STRING
+    elif device['vendor_id'] == constant.ADAPTOR['operation']['vendor_id'] and \
+            device['product_id'] == constant.ADAPTOR['operation']['product_id']:
+        return constant.ADAPTOR['operation']['product_string']
 
 
 def read(devices, device_name, data_label):
