@@ -3,7 +3,7 @@ from common.datetime_ import datetime
 __author__ = 'Retronic Design'
 __email__ = 'info@retronicdesign.com'
 __copyright__ = f'Copyright © {datetime.get_years(2012)} {__author__} <{__email__}>. All rights reserved.'
-__project__ = 'USB Joystick Adapter'
+__project__ = 'DB9 to USB Game Controller Adapter'
 __credits__ = {
     'Francis-Olivier Gradel, Eng.': {
         'organization': f'{__author__}',
