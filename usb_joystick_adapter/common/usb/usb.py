@@ -155,6 +155,8 @@ def read(devices, device_name, data_label):
             print(f'Reading from device')
 
         # Read data from device
+        data = None
+        
         for address in range(0, 32512, 16):
             data = hid_device.read(address)  # TODO: Fix Input/Output Error Exception: read error
             print(f'Read: [Block: {int(address / 16)}, Address: {address}, Data: {data}]')
