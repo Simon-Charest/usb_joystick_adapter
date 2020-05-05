@@ -140,14 +140,23 @@ def read(devices, device_name, data_label):
         hid_device.open_path(device['path'])
         hid_device.set_nonblocking(1)
 
+        # TODO: Fix Input/Output Error Exception: get serial number string error
+        # serial_number = hid_device.get_serial_number_string()
+
+        # TODO: Fix Input/Output Error Exception: read error
+        # feature_report = hid_device.get_feature_report(0x0, 0x80)
+
+        # TODO: This is a test
+        hid_device.send_feature_report(0x0)
+
         if constant.DEBUG:
             print(f'Device: {device}')
             print(f'HID Device: {hid_device}')
             print(f'Reading from device')
 
-        # Read data from device (TODO: Dev/fix this)
+        # Read data from device
         for address in range(0, 32512, 16):
-            data = hid_device.read(address)
+            data = hid_device.read(address)  # TODO: Fix Input/Output Error Exception: read error
             print(f'Read: [Block: {int(address / 16)}, Address: {address}, Data: {data}]')
 
         hid_device.close()
