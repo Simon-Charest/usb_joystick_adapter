@@ -3,22 +3,14 @@ import glob
 import os
 
 
-def get_bytes(data):
-    return [data[x:x + 2] for x in range(1, len(data) - 2, 2)]
+def get_bytes(data, left_trim=0, right_trim=0):
+    return [data[x:x + 2] for x in range(left_trim, len(data) - right_trim, 2)]
 
 
-def get_data(intel_hex):
-    data = [object_['data'].ljust(32, 'F') for object_ in intel_hex if object_['record_type'] == '00']
-    bytes_ = list()
+def convert_to_int(bytes_):
+    int_ = [int(b, 16) for b in bytes_]
 
-    for d in data:
-        bytes_.append([int(d[b:b + 2], 16) for b in range(0, len(d), 2)])
-
-    if constant.DEBUG:
-        print(f'Data: {data}')
-        print(f'Bytes: {bytes_}')
-
-    return bytes_
+    return int_
 
 
 def get_file_names(files):
@@ -41,31 +33,42 @@ def get_intel_hex(file):
 
     for line in lines:
         line = line.rstrip()
-
         start_code = line[0:1]
         byte_count = line[1:3]
         byte_count_decimal = int(byte_count, 16)
         address = line[3:7]
         record_type = line[7:9]
-        data = ''
+        record_type_description = get_record_type(record_type)
 
         if record_type == '00':
             data = line[9:(2 * byte_count_decimal + 9)]
 
+        else:
+            data = ''
+
+        data_justified = data.ljust(32, 'F')
+        data_bytes = get_bytes(data_justified)
+        data_int = convert_to_int(data_bytes)
         checksum = line[-2:]
         checksum_decimal = int(checksum, 16)
-
+        bytes_ = get_bytes(line, 1, 2)
+        sum_ = get_sum(bytes_)
         json = {
             'start_code': start_code,
             'byte_count': byte_count,
+            'byte_count_decimal': byte_count_decimal,
             'address': address,
             'record_type': record_type,
+            'record_type_description': record_type_description,
             'data': data,
-            'checksum': checksum
+            'data_justified': data_justified,
+            'data_bytes': data_bytes,
+            'data_int': data_int,
+            'checksum': checksum,
+            'checksum_decimal': checksum_decimal,
+            'bytes_': bytes_,
+            'sum_': sum_
         }
-
-        bytes_ = get_bytes(line)
-        sum_ = get_sum(bytes_)
 
         if checksum_decimal != sum_:
             print(f"Calculated checksum {format(sum_, 'X')} mismatch checksum {checksum} in {intel_hex}")

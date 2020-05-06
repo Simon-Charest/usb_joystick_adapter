@@ -49,10 +49,12 @@ ABOUT = f'{__project__}\n' \
         f'Both are to be used with specific devices with DB9 connectors.\n' \
         f'\n' \
         f'This product is license under the {__license__} License Terms.'
-ADAPTOR = {
+ADAPTER = {
     'boot': {
         'vendor_id': 0x16C0,  # hex: 0x16C0, int: 5824, bin: 0001 0110 1100 0000
+        'vendor_description': 'Van Ooijen Technische Informatica',
         'product_id': 0x5DF,  # hex: 0x5DF, int: 1503, bin: 0101 1101 1111
+        'product_description': 'HID device except mice, keyboards, and joysticks',
         'manufacturer_string': 'obdev.at',
         'product_string': 'HIDBoot'
     },
@@ -69,8 +71,11 @@ ADAPTOR = {
 ARGV_OVERRIDE = 'usb_joystick_adapter.py -g'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:c'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:d'
-BOOT_LOAD_HID = "'C:/src/usb_joystick_adapter-git/etc/bootloadhid/bootloadHID.exe' -r " \
-                "'C:/src/usb_joystick_adapter-git/usb_joystick_adapter/data/Atari_C64_Amiga_Joystick_v3.1.hex'"
+BOOT_LOAD_HID = {
+    'bootloadHID': '"C:/src/bootloadhid/bootloadHID.exe" -r',
+    'atari': '"C:/src/usb_joystick_adapter-git/usb_joystick_adapter/data/Atari_C64_Amiga_Joystick_v3.1.hex"',
+    'genesis': '"C:/src/usb_joystick_adapter-git/usb_joystick_adapter/data/Sega_Genesis_Joypad_v3.1.hex"'
+}
 DEBUG = True
 DEVICE_SIZE = 32768  # hex: 0x8000, int: 32768, bin: ‭1000 0000 0000 0000
 FIRMWARE = 'data/*.hex'

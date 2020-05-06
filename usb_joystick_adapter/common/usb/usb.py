@@ -111,13 +111,13 @@ def get_product_string(device):
     if device['product_string']:
         return device['product_string']
 
-    elif device['vendor_id'] == constant.ADAPTOR['boot']['vendor_id'] and \
-            device['product_id'] == constant.ADAPTOR['boot']['product_id']:
-        return constant.ADAPTOR['boot']['product_string']
+    elif device['vendor_id'] == constant.ADAPTER['boot']['vendor_id'] and \
+            device['product_id'] == constant.ADAPTER['boot']['product_id']:
+        return constant.ADAPTER['boot']['product_string']
 
-    elif device['vendor_id'] == constant.ADAPTOR['operation']['vendor_id'] and \
-            device['product_id'] == constant.ADAPTOR['operation']['product_id']:
-        return constant.ADAPTOR['operation']['product_string']
+    elif device['vendor_id'] == constant.ADAPTER['operation']['vendor_id'] and \
+            device['product_id'] == constant.ADAPTER['operation']['product_id']:
+        return constant.ADAPTER['operation']['product_string']
 
 
 def read(devices, device_name, data_label):
@@ -189,6 +189,7 @@ def test(devices, device_name, data_label):
     device = get_device(devices, device_name)  # Get device by name
     hid_device = hid.device()
     hid_device.open(device['vendor_id'], device['product_id'])
+    product = hid_device.get_product_string()
 
     try:
         # TODO: Fix test release (currently needs to hold escape key while using joystick)
@@ -196,22 +197,45 @@ def test(devices, device_name, data_label):
             data = hid_device.read(16)
             action = []
 
-            # Atari 2600 CX40 Joystick
+            """ Horizontal """
 
-            if data[0] == 0:
-                action += 'L'
+            if data[0] == 0:  # Left
+                action += '←'
 
-            if data[0] == 255:
-                action += 'R'
+            elif data[0] == 128:  # Center
+                pass
 
-            if data[1] == 0:
-                action += 'U'
+            elif data[0] == 255:  # Right
+                action += '→'
 
-            if data[1] == 255:
-                action += 'D'
+            """ Vertical """
 
-            if data[2] == 1:
-                action += '1'
+            if data[1] == 0:  # Up
+                action += '↑'
+
+            elif data[1] == 128:  # Center
+                pass
+
+            elif data[1] == 255:  # Down
+                action += '↓'
+
+            """ Buttons """
+
+            if data[2] == 0:  # No Button
+                pass
+
+            elif data[2] in [1, 3]:  # Button 1 / A
+                if 'Atari C64 Amiga Joystick' in product:
+                    action += '1'
+
+                elif 'Sega Genesis Joypad' in product:
+                    action += 'A'
+
+            elif data[2] == 8:  # Start button
+                action += 'S'
+
+            elif data[2] == 9:  # A and Start buttons
+                action += 'AS'
 
             string = f'Data: {data}, Action: {action}'
 
@@ -235,7 +259,6 @@ def write(files, file_name, devices, device_name):
     # Get data from Intel HEX file
     file = get_file(files, file_name)
     intel_hex = io.get_intel_hex(file)
-    data = io.get_data(intel_hex)
 
     # Get device by name
     device = get_device(devices, device_name)
@@ -251,13 +274,66 @@ def write(files, file_name, devices, device_name):
 
         if constant.DEBUG:
             print(f'Writing to device')
-            print(f'Data: {data}')
 
-        for block in data:
+        for block in intel_hex:
             if constant.DEBUG:
                 print(f'Block: {block}')
 
-            hid_device.write(block)
+            # TODO: Dev/test this
+            hid_device.write(block['data_int'])
+
+            # TODO: Fix TypeError: an integer is required
+            # hid_device.get_feature_report(int(block['address'], 16), block['data_int'])
+
+            # SET_IDLE Request
+            # 0000   1c 00 50 60 3d 9a 06 9c ff ff 00 00 00 00 1b 00
+            # 0010   00 01 00 1a 00 00 02 08 00 00 00 00 21 0a 00 00
+            # 0020   00 00 00 00
+
+            # SET_IDLE Response
+            # 0000   1c 00 50 60 3d 9a 06 9c ff ff 00 00 00 00 08 00
+            # 0010   01 01 00 1a 00 00 02 00 00 00 00 03
+
+            # GET DESCRIPTOR Request STRING
+            # 0000   1c 00 b0 e2 27 9b 06 9c ff ff 00 00 00 00 0b 00
+            # 0010   00 01 00 1a 00 80 02 08 00 00 00 00 80 06 01 03
+            # 0020   09 04 02 02
+
+            # GET DESCRIPTOR Response STRING
+            # 0000   1c 00 b0 e2 27 9b 06 9c ff ff 00 00 00 00 08 00
+            # 0010   01 01 00 1a 00 80 02 12 00 00 00 03 12 03 6f 00
+            # 0020   62 00 64 00 65 00 76 00 2e 00 61 00 74 00
+
+            # GET DESCRIPTOR Request STRING
+            # 0000   1c 00 b0 52 7d 92 06 9c ff ff 00 00 00 00 0b 00
+            # 0010   00 01 00 1a 00 80 02 08 00 00 00 00 80 06 02 03
+            # 0020   09 04 02 02
+
+            # GET DESCRIPTOR Response STRING
+            # 0000   1c 00 b0 52 7d 92 06 9c ff ff 00 00 00 00 08 00
+            # 0010   01 01 00 1a 00 80 02 10 00 00 00 03 10 03 48 00
+            # 0020   49 00 44 00 42 00 6f 00 6f 00 74 00
+
+            # GET_REPORT Request
+            # 0000   1c 00 a0 e9 d2 8f 06 9c ff ff 00 00 00 00 1b 00
+            # 0010   00 01 00 1a 00 80 02 08 00 00 00 00 a1 01 01 03
+            # 0020   00 00 84 00
+
+            # GET_REPORT Response
+            # 0000   1c 00 a0 e9 d2 8f 06 9c ff ff 00 00 00 00 08 00
+            # 0010   01 01 00 1a 00 80 02 07 00 00 00 03 01 80 00 00
+            # 0020   80 00 00
+
+            # [...]
+
+            # GET_REPORT Request
+            # 0000   1c 00 a0 e9 67 99 06 9c ff ff 00 00 00 00 1b 00
+            # 0010   00 01 00 1a 00 00 02 0f 00 00 00 00 21 09 01 03
+            # 0020   00 00 07 00 01 00 7f 00 01 80 00
+
+            # GET_REPORT Response
+            # 0000   1c 00 a0 e9 67 99 06 9c ff ff 11 00 00 c0 08 00
+            # 0010   01 01 00 1a 00 00 02 00 00 00 00 03
 
         hid_device.close()
 

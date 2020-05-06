@@ -51,13 +51,13 @@ def execute():
     devices_label.grid(row=1, column=LABEL_COLUMN, sticky=NW)
 
     # Manage option menu
-    modes = constant.ADAPTOR.keys()
+    modes = constant.ADAPTER.keys()
     vendor_ids = list()
     product_ids = list()
 
     for mode in modes:
-        vendor_ids.append(constant.ADAPTOR[mode]['vendor_id'])
-        product_ids.append(constant.ADAPTOR[mode]['product_id'])
+        vendor_ids.append(constant.ADAPTER[mode]['vendor_id'])
+        product_ids.append(constant.ADAPTER[mode]['product_id'])
 
     devices = usb.get_devices(vendor_ids, product_ids)
     device_names = usb.get_device_names(devices)
