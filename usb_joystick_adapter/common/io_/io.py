@@ -37,6 +37,7 @@ def get_intel_hex(file):
         byte_count = line[1:3]
         byte_count_decimal = int(byte_count, 16)
         address = line[3:7]
+        address_int = int(address, 16)
         record_type = line[7:9]
         record_type_description = get_record_type(record_type)
 
@@ -58,6 +59,7 @@ def get_intel_hex(file):
             'byte_count': byte_count,
             'byte_count_decimal': byte_count_decimal,
             'address': address,
+            'address_int': address_int,
             'record_type': record_type,
             'record_type_description': record_type_description,
             'data': data,

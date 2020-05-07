@@ -279,61 +279,24 @@ def write(files, file_name, devices, device_name):
             if constant.DEBUG:
                 print(f'Block: {block}')
 
-            # TODO: Dev/test this
-            hid_device.write(block['data_int'])
+            if block['record_type'] != '01':  # if not End Of File
+                # Write a block of 16 integer values
+                # TODO: Dev/test this
+                hid_device.write(block['data_int'])
 
-            # TODO: Fix TypeError: an integer is required
-            # hid_device.get_feature_report(int(block['address'], 16), block['data_int'])
+                for byte in range(0, 16):
+                    address_int = block['address_int'] + byte
+                    address_hex = hex(address_int)
+                    data_int = block['data_int'][byte]
+                    data_hex = hex(byte)
 
-            # SET_IDLE Request
-            # 0000   1c 00 50 60 3d 9a 06 9c ff ff 00 00 00 00 1b 00
-            # 0010   00 01 00 1a 00 00 02 08 00 00 00 00 21 0a 00 00
-            # 0020   00 00 00 00
+                    if constant.DEBUG:
+                        print(f'Byte: {byte}, Address (int): {address_int}, Address (hex): {address_hex}, '
+                              f'Data (int): {data_int}, Data (hex): {data_hex}')
 
-            # SET_IDLE Response
-            # 0000   1c 00 50 60 3d 9a 06 9c ff ff 00 00 00 00 08 00
-            # 0010   01 01 00 1a 00 00 02 00 00 00 00 03
-
-            # GET DESCRIPTOR Request STRING
-            # 0000   1c 00 b0 e2 27 9b 06 9c ff ff 00 00 00 00 0b 00
-            # 0010   00 01 00 1a 00 80 02 08 00 00 00 00 80 06 01 03
-            # 0020   09 04 02 02
-
-            # GET DESCRIPTOR Response STRING
-            # 0000   1c 00 b0 e2 27 9b 06 9c ff ff 00 00 00 00 08 00
-            # 0010   01 01 00 1a 00 80 02 12 00 00 00 03 12 03 6f 00
-            # 0020   62 00 64 00 65 00 76 00 2e 00 61 00 74 00
-
-            # GET DESCRIPTOR Request STRING
-            # 0000   1c 00 b0 52 7d 92 06 9c ff ff 00 00 00 00 0b 00
-            # 0010   00 01 00 1a 00 80 02 08 00 00 00 00 80 06 02 03
-            # 0020   09 04 02 02
-
-            # GET DESCRIPTOR Response STRING
-            # 0000   1c 00 b0 52 7d 92 06 9c ff ff 00 00 00 00 08 00
-            # 0010   01 01 00 1a 00 80 02 10 00 00 00 03 10 03 48 00
-            # 0020   49 00 44 00 42 00 6f 00 6f 00 74 00
-
-            # GET_REPORT Request
-            # 0000   1c 00 a0 e9 d2 8f 06 9c ff ff 00 00 00 00 1b 00
-            # 0010   00 01 00 1a 00 80 02 08 00 00 00 00 a1 01 01 03
-            # 0020   00 00 84 00
-
-            # GET_REPORT Response
-            # 0000   1c 00 a0 e9 d2 8f 06 9c ff ff 00 00 00 00 08 00
-            # 0010   01 01 00 1a 00 80 02 07 00 00 00 03 01 80 00 00
-            # 0020   80 00 00
-
-            # [...]
-
-            # GET_REPORT Request
-            # 0000   1c 00 a0 e9 67 99 06 9c ff ff 00 00 00 00 1b 00
-            # 0010   00 01 00 1a 00 00 02 0f 00 00 00 00 21 09 01 03
-            # 0020   00 00 07 00 01 00 7f 00 01 80 00
-
-            # GET_REPORT Response
-            # 0000   1c 00 a0 e9 67 99 06 9c ff ff 11 00 00 c0 08 00
-            # 0010   01 01 00 1a 00 00 02 00 00 00 00 03
+                    # Write an integer value, per address
+                    # TODO: Fix Input/Output Error Exception: read error
+                    # hid_device.get_feature_report(address_int, data_int)
 
         hid_device.close()
 
