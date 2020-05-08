@@ -3,6 +3,7 @@ from common.io_ import io
 from tkinter import messagebox
 import hid  # Package: hidapi
 import keyboard
+import subprocess
 
 
 def get_all_devices():
@@ -118,6 +119,32 @@ def get_product_string(device):
     elif device['vendor_id'] == constant.ADAPTER['operation']['vendor_id'] and \
             device['product_id'] == constant.ADAPTER['operation']['product_id']:
         return constant.ADAPTER['operation']['product_string']
+
+
+def load_hid_boot(files, file_name, data_label):
+    if file_name in ('', 'None'):
+        messagebox.showinfo('Information', 'Configuration must be selected.')
+
+        return
+
+    file = get_file(files, file_name)
+    command = f'"{constant.BOOT_LOAD_HID}" -r "{file}"'
+
+    if constant.DEBUG:
+        print(f'Command: {command}')
+
+    try:
+        output_bytes = subprocess.check_output(command, stderr=subprocess.STDOUT)
+        output_string = output_bytes.decode()
+
+        if constant.DEBUG:
+            print(f'Output Bytes: {output_bytes}')
+            print(f'Output String: {output_string}')
+
+        data_label['text'] = constant.SUCCESS
+
+    except subprocess.CalledProcessError:
+        data_label['text'] = constant.ERROR_COMMUNICATION
 
 
 def read(devices, device_name, data_label):
@@ -250,7 +277,7 @@ def test(devices, device_name, data_label):
         hid_device.close()
 
 
-def write(files, file_name, devices, device_name):
+def write(files, file_name, devices, device_name, data_label):
     if file_name in ('', 'None') or device_name in ('', 'None'):
         messagebox.showinfo('Information', 'Configuration and device must be selected.')
 
@@ -303,10 +330,10 @@ def write(files, file_name, devices, device_name):
         if constant.DEBUG:
             print(f'Device closed')
 
+        data_label['text'] = constant.SUCCESS
+
     except IOError as io_error:
         print(f'Input/Output Error Exception: {io_error}')
 
     except ValueError as value_error:
         print(f'Value Error Exception: {value_error}')
-
-    messagebox.showinfo('Success', 'Successfully written configuration to device.')

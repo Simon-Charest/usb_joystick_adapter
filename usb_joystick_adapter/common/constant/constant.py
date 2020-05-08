@@ -81,13 +81,17 @@ ADAPTER = {
 ARGV_OVERRIDE = 'usb_joystick_adapter.py -g'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:c'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:d'
-BOOT_LOAD_HID = {
-    'bootloadHID': '"C:/src/bootloadhid/bootloadHID.exe" -r',
-    'atari': '"C:/src/usb_joystick_adapter-git/usb_joystick_adapter/data/Atari_C64_Amiga_Joystick_v3.1.hex"',
-    'genesis': '"C:/src/usb_joystick_adapter-git/usb_joystick_adapter/data/Sega_Genesis_Joypad_v3.1.hex"'
-}
+BOOT_LOAD_HID = 'bin/bootloadHID.exe'
 DEBUG = True
 DEVICE_SIZE = 32768  # hex: 0x8000, int: 32768, bin: ‭1000 0000 0000 0000
+
+# Output messages
+ERROR_COMMUNICATION = 'Communication error with device.'
+ERROR_DEVICE_NOT_FOUND = 'The specified device was not found'
+ERROR_NO_SUCH_FILE = 'No such file or directory'
+LAST_ADDRESSES = '0x07f00 ... 0x07f80'
+SUCCESS = 'Successfully written configuration to device.'
+
 FIRMWARE = 'data/*.hex'
 ICON = 'resources/1f579.png'
 PAGE_SIZE = 128  # hex: 0x80, int: 128, bin: 1000 0000

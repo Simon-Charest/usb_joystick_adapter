@@ -91,7 +91,9 @@ def execute():
 
     # Display radio button
     action = StringVar()
-    action.set('r')
+    action.set('l')
+    load_hid_boot_radiobutton = Radiobutton(action_frame, text='Load HID Boot', variable=action, value='l')
+    load_hid_boot_radiobutton.pack(side=LEFT)
     read_radiobutton = Radiobutton(action_frame, text='Read', variable=action, value='r')
     read_radiobutton.pack(side=LEFT)
     test_radiobutton = Radiobutton(action_frame, text='Test', variable=action, value='t')
@@ -112,7 +114,7 @@ def execute():
     status_label.grid(row=3, column=LABEL_COLUMN, sticky=NW)
 
     # Display label
-    data_label = Label(root, text='', borderwidth='1', relief='ridge', height=10)
+    data_label = Label(root, text='', borderwidth='1', relief='ridge')
     data_label.grid(row=3, column=CONTROL_COLUMN, columnspan=3, sticky=NSEW)
 
     # Redraw
@@ -120,14 +122,17 @@ def execute():
 
 
 def select(action, files, file_name, devices, device_name, data_label):
-    if action == 'r':
+    if action == 'l':
+        usb.load_hid_boot(files, file_name, data_label)
+
+    elif action == 'r':
         usb.read(devices, device_name, data_label)
 
     elif action == 't':
         usb.test(devices, device_name, data_label)
 
     elif action == 'w':
-        usb.write(files, file_name, devices, device_name)
+        usb.write(files, file_name, devices, device_name, data_label)
 
 
 def show_about(x=0, y=0):
