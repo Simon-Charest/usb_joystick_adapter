@@ -24,7 +24,7 @@ def get_files(path):
         print(f'Path: {path}')
         print(f'Files: {files}')
 
-    return glob.glob(path)
+    return files
 
 
 def get_intel_hex(file):

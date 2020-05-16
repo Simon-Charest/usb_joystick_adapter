@@ -94,12 +94,14 @@ def execute():
     action.set('l')
     load_hid_boot_radiobutton = Radiobutton(action_frame, text='Load HID Boot', variable=action, value='l')
     load_hid_boot_radiobutton.pack(side=LEFT)
-    read_radiobutton = Radiobutton(action_frame, text='Read', variable=action, value='r')
-    read_radiobutton.pack(side=LEFT)
-    test_radiobutton = Radiobutton(action_frame, text='Test', variable=action, value='t')
-    test_radiobutton.pack(side=LEFT)
-    write_radiobutton = Radiobutton(action_frame, text='Write', variable=action, value='w')
-    write_radiobutton.pack(side=LEFT)
+
+    # TODO: Fix these options
+    # read_radiobutton = Radiobutton(action_frame, text='Read', variable=action, value='r')
+    # read_radiobutton.pack(side=LEFT)
+    # test_radiobutton = Radiobutton(action_frame, text='Test', variable=action, value='t')
+    # test_radiobutton.pack(side=LEFT)
+    # write_radiobutton = Radiobutton(action_frame, text='Write', variable=action, value='w')
+    # write_radiobutton.pack(side=LEFT)
 
     # Display button
     ok_button = Button(root, text='OK',

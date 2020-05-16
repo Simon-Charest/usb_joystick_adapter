@@ -94,13 +94,13 @@ def get_manufacturer_string(device):
     if device['manufacturer_string']:
         return device['manufacturer_string']
 
-    elif device['vendor_id'] == constant.ADAPTOR['boot']['vendor_id'] and \
-            device['product_id'] == constant.ADAPTOR['boot']['product_id']:
-        return constant.ADAPTOR['boot']['manufacturer_string']
+    elif device['vendor_id'] == constant.ADAPTER['boot']['vendor_id'] and \
+            device['product_id'] == constant.ADAPTER['boot']['product_id']:
+        return constant.ADAPTER['boot']['manufacturer_string']
 
-    elif device['vendor_id'] == constant.ADAPTOR['operation']['vendor_id'] and \
-            device['product_id'] == constant.ADAPTOR['operation']['product_id']:
-        return constant.ADAPTOR['operation']['manufacturer_string']
+    elif device['vendor_id'] == constant.ADAPTER['operation']['vendor_id'] and \
+            device['product_id'] == constant.ADAPTER['operation']['product_id']:
+        return constant.ADAPTER['operation']['manufacturer_string']
 
 
 def get_product_string(device):

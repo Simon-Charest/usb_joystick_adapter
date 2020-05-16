@@ -1,5 +1,7 @@
 from common.constant import constant
 from common.gui import gui
+from common.io_ import io
+from common.usb import usb
 import sys
 
 # Global constants definitions
@@ -25,6 +27,7 @@ USAGE = f'Usage:{EOF}'\
         f'  python usb_joystick_adapter.py -d:"{DEVICE_EXAMPLE}" -r{EOF}'\
         f'  python usb_joystick_adapter.py -d:"{DEVICE_EXAMPLE}" -t{EOF}'\
         f'  python usb_joystick_adapter.py -g{EOF}'\
+        f'  python usb_joystick_adapter.py -l:a{EOF}'\
         f'  python usb_joystick_adapter.py -l:c{EOF}'\
         f'  python usb_joystick_adapter.py -l:d{EOF}'
 
@@ -33,28 +36,74 @@ def execute():
     if constant.ARGV_OVERRIDE:
         sys.argv = constant.ARGV_OVERRIDE.split(' ')
 
+    if constant.DEBUG:
+        print(f'sys.argv: {sys.argv}')
+        print(f'len(sys.argv): {len(sys.argv)}')
+
     # Manage input arguments
-    if len(sys.argv) == 3 and '-b' in sys.argv and '-c:' in sys.argv:
-        print('TODO: Load configuration data into HID Boot device')
+    if len(sys.argv) == 3 and '-b' in sys.argv and is_substring_in(sys.argv, '-c:'):
+        position = get_position(sys.argv, '-c:')
+        configuration_file_name = sys.argv[position]
+        # usb.load_hid_boot(configuration_file_name)  # TODO: In dev
 
-    elif len(sys.argv) == 4 and '-c:' in sys.argv and '-d:' in sys.argv and '-w' in sys.argv:
-        print('TODO: Write configuration data to device')
+    elif len(sys.argv) == 4 and is_substring_in(sys.argv, '-c:') and is_substring_in(sys.argv, '-d:') \
+            and '-w' in sys.argv:
+        configuration_file_name_position = get_position(sys.argv, '-c:')
+        device_name_position = get_position(sys.argv, '-d:')
+        configuration_file_name = sys.argv[configuration_file_name_position]
+        device_name = sys.argv[device_name_position]
+        # usb.write(configuration_file_name, device_name)  # TODO: In dev
 
-    elif len(sys.argv) == 3 and '-d:' in sys.argv and '-r' in sys.argv:
-        print('TODO: Read Device mode')
+    elif len(sys.argv) == 3 and is_substring_in(sys.argv, '-d:') and '-r' in sys.argv:
+        device_name_position = get_position(sys.argv, '-d:')
+        device_name = sys.argv[device_name_position]
+        # usb.read(device_name)  # TODO: In dev
 
-    elif len(sys.argv) == 3 and '-d:' in sys.argv and '-t' in sys.argv:
-        print('TODO: Test Device mode')
+    elif len(sys.argv) == 3 and is_substring_in(sys.argv, '-d:') and '-t' in sys.argv:
+        device_name_position = get_position(sys.argv, '-d:')
+        device_name = sys.argv[device_name_position]
+        # usb.test(device_name)  # TODO: In dev
 
     elif len(sys.argv) == 2 and sys.argv[1] == '-g':
         gui.execute()
 
+    elif len(sys.argv) == 2 and sys.argv[1] == '-l:a':
+        devices = usb.get_all_devices()
+        device_names = usb.get_device_names(devices)
+        print_list(device_names)
+
     elif len(sys.argv) == 2 and sys.argv[1] == '-l:c':
-        print('TODO: List configuration file names')
+        files = io.get_files(constant.FIRMWARE)
+        print_list(files)
 
     elif len(sys.argv) == 2 and sys.argv[1] == '-l:d':
-        print('TODO: List compatible devices')
+        devices = usb.get_devices([constant.ADAPTER['boot']['vendor_id'],
+                                   constant.ADAPTER['operation']['vendor_id']],
+                                  [constant.ADAPTER['boot']['product_id'],
+                                  constant.ADAPTER['operation']['product_id']])
+        device_names = usb.get_device_names(devices)
+        print_list(device_names)
 
     else:
         print(USAGE)
         exit()
+
+
+def get_position(arguments, needle):
+    position = 0
+
+    for argument in arguments:
+        if argument.find(needle):
+            return position
+
+        position += 1
+
+
+def is_substring_in(haystack, needle):
+    return [string for string in haystack if needle in string]
+
+
+def print_list(list_):
+    if list_:
+        for element in list_:
+            print(element)
