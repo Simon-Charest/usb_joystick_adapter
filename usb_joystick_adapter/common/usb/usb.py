@@ -147,6 +147,26 @@ def load_hid_boot(files, file_name, data_label):
         data_label['text'] = constant.ERROR_COMMUNICATION
 
 
+def load_hid_boot_cli(configuration_file_name):
+    command = f'"{constant.BOOT_LOAD_HID}" -r "{configuration_file_name}"'
+
+    if constant.DEBUG:
+        print(f'Command: {command}')
+
+    try:
+        output_bytes = subprocess.check_output(command, stderr=subprocess.STDOUT)
+        output_string = output_bytes.decode()
+
+        if constant.DEBUG:
+            print(f'Output Bytes: {output_bytes}')
+            print(f'Output String: {output_string}')
+
+        return True
+
+    except subprocess.CalledProcessError:
+        return False
+
+
 def read(devices, device_name, data_label):
     """ Read data from device """
 
@@ -203,6 +223,64 @@ def read(devices, device_name, data_label):
 
     except ValueError as value_error:
         print(f'Value Error Exception: {value_error}')
+
+
+def read_cli(device_name):
+    """ Read data from device """
+
+    if device_name in ('', 'None'):
+        messagebox.showinfo('Information', 'Device must be selected.')
+
+        return
+
+    hid_device = hid.device()
+    hid_device.open(device_name['vendor_id'], device_name['product_id'])
+
+    try:
+        if constant.DEBUG:
+            print(f'Opening device')
+
+        hid_device = hid.device(device_name['vendor_id'], device_name['product_id'])
+        hid_device.open_path(device_name['path'])
+        hid_device.set_nonblocking(1)
+
+        # TODO: Fix Input/Output Error Exception: get serial number string error
+        # serial_number = hid_device.get_serial_number_string()
+
+        # TODO: Fix Input/Output Error Exception: read error
+        # feature_report = hid_device.get_feature_report(0x0, 0x80)
+
+        # TODO: This is a test
+        hid_device.send_feature_report(0x0)
+
+        if constant.DEBUG:
+            print(f'Device: {device_name}')
+            print(f'HID Device: {hid_device}')
+            print(f'Reading from device')
+
+        # Read data from device
+        data = None
+
+        for address in range(0, 32512, 16):
+            data = hid_device.read(address)  # TODO: Fix Input/Output Error Exception: read error
+            print(f'Read: [Block: {int(address / 16)}, Address: {address}, Data: {data}]')
+
+        hid_device.close()
+
+        if constant.DEBUG:
+            print(f'Device closed')
+
+        return data
+
+    except IOError as io_error:
+        print(f'Input/Output Error Exception: {io_error}')
+
+        return False
+
+    except ValueError as value_error:
+        print(f'Value Error Exception: {value_error}')
+
+        return False
 
 
 def test(devices, device_name, data_label):
@@ -277,6 +355,72 @@ def test(devices, device_name, data_label):
         hid_device.close()
 
 
+def test_cli(device_name):
+    """ Let the user perform a joystick test """
+
+    hid_device = hid.device()
+    hid_device.open(device_name['vendor_id'], device_name['product_id'])
+    product = hid_device.get_product_string()
+
+    try:
+        # TODO: Fix test release (currently needs to hold escape key while using joystick)
+        while not keyboard.is_pressed('escape'):
+            data = hid_device.read(16)
+            action = []
+
+            """ Horizontal """
+
+            if data[0] == 0:  # Left
+                action += '←'
+
+            elif data[0] == 128:  # Center
+                pass
+
+            elif data[0] == 255:  # Right
+                action += '→'
+
+            """ Vertical """
+
+            if data[1] == 0:  # Up
+                action += '↑'
+
+            elif data[1] == 128:  # Center
+                pass
+
+            elif data[1] == 255:  # Down
+                action += '↓'
+
+            """ Buttons """
+
+            if data[2] == 0:  # No Button
+                pass
+
+            elif data[2] in [1, 3]:  # Button 1 / A
+                if 'Atari C64 Amiga Joystick' in product:
+                    action += '1'
+
+                elif 'Sega Genesis Joypad' in product:
+                    action += 'A'
+
+            elif data[2] == 8:  # Start button
+                action += 'S'
+
+            elif data[2] == 9:  # A and Start buttons
+                action += 'AS'
+
+            string = f'Data: {data}, Action: {action}'
+
+            if constant.DEBUG:
+                print(string)
+
+            hid_device.close()
+
+            return True
+
+    except:
+        return False
+
+
 def write(files, file_name, devices, device_name, data_label):
     if file_name in ('', 'None') or device_name in ('', 'None'):
         messagebox.showinfo('Information', 'Configuration and device must be selected.')
@@ -337,3 +481,60 @@ def write(files, file_name, devices, device_name, data_label):
 
     except ValueError as value_error:
         print(f'Value Error Exception: {value_error}')
+
+
+def write_cli(configuration_file_name, device_name):
+    # Get data from Intel HEX file
+    intel_hex = io.get_intel_hex(configuration_file_name)
+
+    # Write data to device
+    try:
+        if constant.DEBUG:
+            print(f'Opening device')
+
+        hid_device = hid.device(device_name['vendor_id'], device_name['product_id'])
+        hid_device.open_path(device_name['path'])
+        hid_device.set_nonblocking(0)
+
+        if constant.DEBUG:
+            print(f'Writing to device')
+
+        for block in intel_hex:
+            if constant.DEBUG:
+                print(f'Block: {block}')
+
+            if block['record_type'] != '01':  # if not End Of File
+                # Write a block of 16 integer values
+                # TODO: Dev/test this
+                hid_device.write(block['data_int'])
+
+                for byte in range(0, 16):
+                    address_int = block['address_int'] + byte
+                    address_hex = hex(address_int)
+                    data_int = block['data_int'][byte]
+                    data_hex = hex(byte)
+
+                    if constant.DEBUG:
+                        print(f'Byte: {byte}, Address (int): {address_int}, Address (hex): {address_hex}, '
+                              f'Data (int): {data_int}, Data (hex): {data_hex}')
+
+                    # Write an integer value, per address
+                    # TODO: Fix Input/Output Error Exception: read error
+                    # hid_device.get_feature_report(address_int, data_int)
+
+        hid_device.close()
+
+        if constant.DEBUG:
+            print(f'Device closed')
+
+        return True
+
+    except IOError as io_error:
+        print(f'Input/Output Error Exception: {io_error}')
+
+        return False
+
+    except ValueError as value_error:
+        print(f'Value Error Exception: {value_error}')
+
+        return False

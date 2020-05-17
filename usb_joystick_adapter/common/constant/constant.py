@@ -84,7 +84,7 @@ ARGV_OVERRIDE = 'usb_joystick_adapter.py -g'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:a'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:c'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:d'
-# BOOT_LOAD_HID = 'bin/bootloadHID.exe'
+BOOT_LOAD_HID = 'bin/bootloadHID.exe'
 DEBUG = False
 DEVICE_SIZE = 32768  # hex: 0x8000, int: 32768, bin: ‭1000 0000 0000 0000
 

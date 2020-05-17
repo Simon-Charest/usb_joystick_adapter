@@ -44,7 +44,7 @@ def execute():
     if len(sys.argv) == 3 and '-b' in sys.argv and is_substring_in(sys.argv, '-c:'):
         position = get_position(sys.argv, '-c:')
         configuration_file_name = sys.argv[position]
-        # usb.load_hid_boot(configuration_file_name)  # TODO: In dev
+        usb.load_hid_boot_cli(configuration_file_name)
 
     elif len(sys.argv) == 4 and is_substring_in(sys.argv, '-c:') and is_substring_in(sys.argv, '-d:') \
             and '-w' in sys.argv:
@@ -52,17 +52,17 @@ def execute():
         device_name_position = get_position(sys.argv, '-d:')
         configuration_file_name = sys.argv[configuration_file_name_position]
         device_name = sys.argv[device_name_position]
-        # usb.write(configuration_file_name, device_name)  # TODO: In dev
+        usb.write_cli(configuration_file_name, device_name)
 
     elif len(sys.argv) == 3 and is_substring_in(sys.argv, '-d:') and '-r' in sys.argv:
         device_name_position = get_position(sys.argv, '-d:')
         device_name = sys.argv[device_name_position]
-        # usb.read(device_name)  # TODO: In dev
+        usb.read_cli(device_name)
 
     elif len(sys.argv) == 3 and is_substring_in(sys.argv, '-d:') and '-t' in sys.argv:
         device_name_position = get_position(sys.argv, '-d:')
         device_name = sys.argv[device_name_position]
-        # usb.test(device_name)  # TODO: In dev
+        usb.test_cli(device_name)
 
     elif len(sys.argv) == 2 and sys.argv[1] == '-g':
         gui.execute()
@@ -77,10 +77,9 @@ def execute():
         print_list(files)
 
     elif len(sys.argv) == 2 and sys.argv[1] == '-l:d':
-        devices = usb.get_devices([constant.ADAPTER['boot']['vendor_id'],
-                                   constant.ADAPTER['operation']['vendor_id']],
-                                  [constant.ADAPTER['boot']['product_id'],
-                                  constant.ADAPTER['operation']['product_id']])
+        vendor_ids = [constant.ADAPTER['boot']['vendor_id'], constant.ADAPTER['operation']['vendor_id']]
+        product_ids = [constant.ADAPTER['boot']['product_id'], constant.ADAPTER['operation']['product_id']]
+        devices = usb.get_devices(vendor_ids, product_ids)
         device_names = usb.get_device_names(devices)
         print_list(device_names)
 
