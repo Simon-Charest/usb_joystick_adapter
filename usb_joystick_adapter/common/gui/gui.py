@@ -16,7 +16,7 @@ def execute():
     root.geometry('400x300')
     root.resizable(0, 0)  # Prevent resizing and disable maximize button
     root.title(constant.__project__)
-    root.tk.call('wm', 'iconphoto', root.w, PhotoImage(file=constant.ICON))
+    root.tk.call('wm', 'iconphoto', root._w, PhotoImage(file=constant.ICON))
 
     """ First row """
 

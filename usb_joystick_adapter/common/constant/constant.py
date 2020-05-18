@@ -1,4 +1,6 @@
 from usb_joystick_adapter.common.datetime_ import datetime
+import os
+import sys
 
 __author__ = 'Retronic Design'
 __email__ = 'info@retronicdesign.com'
@@ -75,6 +77,7 @@ ADAPTER = {
         'product_string': 'Atari C64 Amiga Joystick v3.1'
     }
 }
+ROOT_DIR = os.path.dirname(sys.modules['__main__'].__file__)
 # ARGV_OVERRIDE = ''
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -b -c:"Atari_C64_Amiga_Joystick_v3.1"'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -c:"Atari_C64_Amiga_Joystick_v3.1" -d:"25d1adf4" -w'
@@ -94,9 +97,8 @@ ERROR_DEVICE_NOT_FOUND = 'The specified device was not found'
 ERROR_NO_SUCH_FILE = 'No such file or directory'
 LAST_ADDRESSES = '0x07f00 ... 0x07f80'
 SUCCESS = 'Successfully written configuration to device.'
-
 FIRMWARE = 'data/*.hex'
-ICON = 'resources/1f579.png'
+ICON = os.path.join(ROOT_DIR, 'resources/1f579.png')
 PAGE_SIZE = 128  # hex: 0x80, int: 128, bin: 1000 0000
 UPLOADING = 32640  # hex: 0x7f80, int: 32640, bin: 0111 1111 1000 0000
 
