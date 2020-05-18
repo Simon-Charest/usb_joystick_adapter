@@ -1,4 +1,4 @@
-from common.cli import cli
+from usb_joystick_adapter.common.cli import cli
 
 
 def run():

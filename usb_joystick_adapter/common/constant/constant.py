@@ -1,4 +1,4 @@
-from common.datetime_ import datetime
+from usb_joystick_adapter.common.datetime_ import datetime
 
 __author__ = 'Retronic Design'
 __email__ = 'info@retronicdesign.com'

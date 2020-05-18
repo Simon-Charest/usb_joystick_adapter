@@ -1,6 +1,6 @@
-from common.constant import constant
-from common.io_ import io
-from common.usb import usb
+from usb_joystick_adapter.common.constant import constant
+from usb_joystick_adapter.common.io_ import io
+from usb_joystick_adapter.common.usb import usb
 from tkinter import *
 
 # Constants

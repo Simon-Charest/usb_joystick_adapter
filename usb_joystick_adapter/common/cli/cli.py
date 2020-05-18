@@ -1,7 +1,7 @@
-from common.constant import constant
-from common.gui import gui
-from common.io_ import io
-from common.usb import usb
+from usb_joystick_adapter.common.constant import constant
+from usb_joystick_adapter.common.gui import gui
+from usb_joystick_adapter.common.io_ import io
+from usb_joystick_adapter.common.usb import usb
 import sys
 
 # Global constants definitions

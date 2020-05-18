@@ -1,4 +1,4 @@
-from common.constant import constant
+from usb_joystick_adapter.common.constant import constant
 import glob
 import os
 

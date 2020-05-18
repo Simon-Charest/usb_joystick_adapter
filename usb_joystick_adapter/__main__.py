@@ -1,5 +1,4 @@
-# from usb_joystick_adapter import app
-import app
+from usb_joystick_adapter import app
 
 # Usage:
 #   C:
