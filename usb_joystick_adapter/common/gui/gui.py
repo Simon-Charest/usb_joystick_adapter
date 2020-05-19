@@ -125,16 +125,16 @@ def execute():
 
 def select(action, files, file_name, devices, device_name, data_label):
     if action == 'l':
-        usb.load_hid_boot(files, file_name, data_label)
+        usb.load_hid_boot_gui(files, file_name, data_label)
 
     elif action == 'r':
-        usb.read(devices, device_name, data_label)
+        usb.read_gui(devices, device_name, data_label)
 
     elif action == 't':
-        usb.test(devices, device_name, data_label)
+        usb.test_gui(devices, device_name, data_label)
 
     elif action == 'w':
-        usb.write(files, file_name, devices, device_name, data_label)
+        usb.write_gui(files, file_name, devices, device_name, data_label)
 
 
 def show_about(x=0, y=0):

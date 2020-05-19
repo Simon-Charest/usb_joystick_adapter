@@ -78,16 +78,16 @@ ADAPTER = {
     }
 }
 ROOT_DIR = os.path.dirname(sys.modules['__main__'].__file__)
-# ARGV_OVERRIDE = ''
+ARGV_OVERRIDE = ''
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -b -c:"Atari_C64_Amiga_Joystick_v3.1"'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -c:"Atari_C64_Amiga_Joystick_v3.1" -d:"25d1adf4" -w'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -d:"25d1adf4" -r'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -d:"25d1adf4" -t'
-ARGV_OVERRIDE = 'usb_joystick_adapter.py -g'
+# ARGV_OVERRIDE = 'usb_joystick_adapter.py -g'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:a'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:c'
 # ARGV_OVERRIDE = 'usb_joystick_adapter.py -l:d'
-BOOT_LOAD_HID = 'bin/bootloadHID.exe'
+BOOT_LOAD_HID = os.path.join(ROOT_DIR, 'bin/bootloadHID.exe')
 DEBUG = False
 DEVICE_SIZE = 32768  # hex: 0x8000, int: 32768, bin: ‭1000 0000 0000 0000
 
@@ -96,7 +96,8 @@ ERROR_COMMUNICATION = 'Communication error with device.'
 ERROR_DEVICE_NOT_FOUND = 'The specified device was not found'
 ERROR_NO_SUCH_FILE = 'No such file or directory'
 LAST_ADDRESSES = '0x07f00 ... 0x07f80'
-SUCCESS = 'Successfully written configuration to device.'
+READ_SUCCESS = 'Successfully read configuration from device.'
+WRITE_SUCCESS = 'Successfully written configuration to device.'
 FIRMWARE = os.path.join(ROOT_DIR, 'data/*.hex')
 ICON = os.path.join(ROOT_DIR, 'resources/1f579.png')
 PAGE_SIZE = 128  # hex: 0x80, int: 128, bin: 1000 0000

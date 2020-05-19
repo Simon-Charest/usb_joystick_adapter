@@ -40,28 +40,32 @@ def execute():
         print(f'sys.argv: {sys.argv}')
         print(f'len(sys.argv): {len(sys.argv)}')
 
+    # Extract keys and values from arguments
+    configuration_key = '-c:'
+    configuration_argument = get_argument(get_sublist(sys.argv, configuration_key))
+    configuration_file_name = get_configuration(configuration_argument)
+    device_key = '-d:'
+    device_argument = get_argument(get_sublist(sys.argv, device_key))
+    device_name = get_device(device_argument)
+
+    if constant.DEBUG:
+        print(f'configuration_key: {configuration_key}')
+        print(f'configuration_argument: {configuration_argument}')
+        print(f'configuration_file_name: {configuration_file_name}')
+        print(f'device_key: {device_key}')
+        print(f'device_argument: {device_argument}')
+
     # Manage input arguments
-    if len(sys.argv) == 3 and '-b' in sys.argv and is_substring_in(sys.argv, '-c:'):
-        position = get_position(sys.argv, '-c:')
-        configuration_file_name = sys.argv[position]
+    if len(sys.argv) == 3 and '-b' in sys.argv and configuration_argument:
         usb.load_hid_boot_cli(configuration_file_name)
 
-    elif len(sys.argv) == 4 and is_substring_in(sys.argv, '-c:') and is_substring_in(sys.argv, '-d:') \
-            and '-w' in sys.argv:
-        configuration_file_name_position = get_position(sys.argv, '-c:')
-        device_name_position = get_position(sys.argv, '-d:')
-        configuration_file_name = sys.argv[configuration_file_name_position]
-        device_name = sys.argv[device_name_position]
+    elif len(sys.argv) == 4 and configuration_argument and device_argument and '-w' in sys.argv:
         usb.write_cli(configuration_file_name, device_name)
 
-    elif len(sys.argv) == 3 and is_substring_in(sys.argv, '-d:') and '-r' in sys.argv:
-        device_name_position = get_position(sys.argv, '-d:')
-        device_name = sys.argv[device_name_position]
+    elif len(sys.argv) == 3 and device_argument and '-r' in sys.argv:
         usb.read_cli(device_name)
 
-    elif len(sys.argv) == 3 and is_substring_in(sys.argv, '-d:') and '-t' in sys.argv:
-        device_name_position = get_position(sys.argv, '-d:')
-        device_name = sys.argv[device_name_position]
+    elif len(sys.argv) == 3 and device_argument and '-t' in sys.argv:
         usb.test_cli(device_name)
 
     elif len(sys.argv) == 2 and sys.argv[1] == '-g':
@@ -88,18 +92,45 @@ def execute():
         exit()
 
 
-def get_position(arguments, needle):
-    position = 0
+def get_argument(sublist):
+    if sublist:
+        return sublist[0]
 
-    for argument in arguments:
-        if argument.find(needle):
-            return position
-
-        position += 1
+    return None
 
 
-def is_substring_in(haystack, needle):
-    return [string for string in haystack if needle in string]
+def get_configuration(configuration_argument):
+    return f'{constant.ROOT_DIR}/data/{configuration_argument}.hex'
+
+
+def get_device(device_argument):
+    # TODO: Dev this
+    return ''
+
+
+def get_sublist(list_, substring):
+    """ Return sublist of elements where substring is found in list_ """
+
+    sublist = [string for string in list_ if substring in string]
+
+    if constant.DEBUG:
+        print(f'Haystack: {list_}')
+        print(f'Needle: {substring}')
+        print(f'Value: {sublist}')
+
+    return sublist
+
+
+def get_value(string, substring):
+    """
+    Extract value starting after substring
+    Example: get_value('-c:"Atari_C64_Amiga_Joystick_v3.1"', '-c:') == 'Atari_C64_Amiga_Joystick_v3.1'
+    """
+
+    start_position = string.find(substring) + len(substring)
+    value = string[start_position:]
+
+    return value
 
 
 def print_list(list_):
