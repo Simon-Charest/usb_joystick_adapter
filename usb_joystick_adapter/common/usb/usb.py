@@ -164,6 +164,7 @@ def load_hid_boot_cli(configuration_file_name):
 
     except subprocess.CalledProcessError as called_process_error:
         print(f'Called Process Error Exception: {called_process_error}')
+        print(f'Try unplugging and replugging device before running this command again.')
 
         return False
 
