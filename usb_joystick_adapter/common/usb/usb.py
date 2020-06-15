@@ -9,7 +9,9 @@ import subprocess
 def get_all_devices():
     """ Get all Universal Serial Bus (USB) Human Interface Devices (HID) """
 
-    return hid.enumerate(0, 0)
+    devices = hid.enumerate(0, 0)
+
+    return devices
 
 
 def get_device(devices, device_name):
@@ -31,7 +33,14 @@ def get_device_names(devices):
     device_names = list()
 
     for device in devices:
-        device_names.append(f"{get_product_string(device)} ({get_identifier(device['path'])})")
+        device_name = f"{get_product_string(device)} ({get_identifier(device['path'])})"
+
+        # Keep only unique device names
+        if device_name not in device_names:
+            device_names.append(device_name)
+
+    # Sort list alphabetically
+    device_names.sort()
 
     return device_names
 

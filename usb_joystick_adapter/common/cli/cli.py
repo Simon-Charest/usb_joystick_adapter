@@ -6,10 +6,14 @@ import sys
 
 # Global constants definitions
 EOF = '\n'  # End of line
-CONFIGURATION_EXAMPLE = 'Atari_C64_Amiga_Joystick_v3.1'
-DEVICE_EXAMPLE = '25d1adf4'
+CONFIGURATION_EXAMPLE = 'HIDBoot'
+# CONFIGURATION_EXAMPLE = 'Atari_C64_Amiga_Joystick_v3.1'
+DEVICE_EXAMPLE = '388b5e99'
+# DEVICE_EXAMPLE = '25d1adf4'
+CLI_EXECUTE = 'python -m usb_joystick_adapter'
+# CLI_EXECUTE = 'python usb_joystick_adapter.py'
 USAGE = f'Usage:{EOF}'\
-        f'  python usb_joystick_adapter.py [-b] [-c:"configuration"] [-d:"device"] [-g] [-l:c | -l:d] [-r] [-t] [-w]' \
+        f'  {CLI_EXECUTE} [-b] [-c:"configuration"] [-d:"device"] [-g] [-l:c | -l:d] [-r] [-t] [-w]' \
         f'{EOF}'\
         f'Switches:{EOF}'\
         f'  -b Load configuration data into HID Boot device{EOF}'\
@@ -22,14 +26,14 @@ USAGE = f'Usage:{EOF}'\
         f'  -t Test Device mode{EOF}'\
         f'  -w Write configuration data to device{EOF}'\
         f'Examples:{EOF}'\
-        f'  python usb_joystick_adapter.py -b -c:"{CONFIGURATION_EXAMPLE}"{EOF}'\
-        f'  python usb_joystick_adapter.py -c:"{CONFIGURATION_EXAMPLE}" -d:"{DEVICE_EXAMPLE}" -w{EOF}'\
-        f'  python usb_joystick_adapter.py -d:"{DEVICE_EXAMPLE}" -r{EOF}'\
-        f'  python usb_joystick_adapter.py -d:"{DEVICE_EXAMPLE}" -t{EOF}'\
-        f'  python usb_joystick_adapter.py -g{EOF}'\
-        f'  python usb_joystick_adapter.py -l:a{EOF}'\
-        f'  python usb_joystick_adapter.py -l:c{EOF}'\
-        f'  python usb_joystick_adapter.py -l:d{EOF}'
+        f'  {CLI_EXECUTE} -b -c:"{CONFIGURATION_EXAMPLE}"{EOF}'\
+        f'  {CLI_EXECUTE} -c:"{CONFIGURATION_EXAMPLE}" -d:"{DEVICE_EXAMPLE}" -w{EOF}'\
+        f'  {CLI_EXECUTE} -d:"{DEVICE_EXAMPLE}" -r{EOF}'\
+        f'  {CLI_EXECUTE} -d:"{DEVICE_EXAMPLE}" -t{EOF}'\
+        f'  {CLI_EXECUTE} -g{EOF}'\
+        f'  {CLI_EXECUTE} -l:a{EOF}'\
+        f'  {CLI_EXECUTE} -l:c{EOF}'\
+        f'  {CLI_EXECUTE} -l:d{EOF}'
 
 
 def execute():
