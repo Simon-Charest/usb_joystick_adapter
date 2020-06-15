@@ -6,8 +6,7 @@ import sys
 
 # Global constants definitions
 EOF = '\n'  # End of line
-CONFIGURATION_EXAMPLE = 'HIDBoot'
-# CONFIGURATION_EXAMPLE = 'Atari_C64_Amiga_Joystick_v3.1'
+CONFIGURATION_EXAMPLE = 'Atari_C64_Amiga_Joystick_v3.1'
 DEVICE_EXAMPLE = '388b5e99'
 # DEVICE_EXAMPLE = '25d1adf4'
 CLI_EXECUTE = 'python -m usb_joystick_adapter'
@@ -47,7 +46,7 @@ def execute():
     # Extract keys and values from arguments
     configuration_key = '-c:'
     configuration_argument = get_argument(get_sublist(sys.argv, configuration_key))
-    configuration_file_name = get_configuration(configuration_argument)
+    configuration_file_name = get_file_name(configuration_argument)
     device_key = '-d:'
     device_argument = get_argument(get_sublist(sys.argv, device_key))
     device_name = get_device(device_argument)
@@ -103,8 +102,11 @@ def get_argument(sublist):
     return None
 
 
-def get_configuration(configuration_argument):
-    return f'{constant.ROOT_DIR}/data/{configuration_argument}.hex'
+def get_file_name(argument):
+    start = argument.find(':') + 1
+    file_name = argument[start:]
+
+    return f'{constant.ROOT_DIR}/data/{file_name}.hex'
 
 
 def get_device(device_argument):
