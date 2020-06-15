@@ -102,6 +102,11 @@ def get_argument(sublist):
     return None
 
 
+def get_device(device_argument):
+    # TODO: Dev this
+    return ''
+
+
 def get_file_name(argument):
     if not argument:
         return None
@@ -110,11 +115,6 @@ def get_file_name(argument):
     file_name = argument[start:]
 
     return f'{constant.ROOT_DIR}/data/{file_name}.hex'
-
-
-def get_device(device_argument):
-    # TODO: Dev this
-    return ''
 
 
 def get_sublist(list_, substring):
