@@ -103,6 +103,9 @@ def get_argument(sublist):
 
 
 def get_file_name(argument):
+    if not argument:
+        return None
+
     start = argument.find(':') + 1
     file_name = argument[start:]
 
