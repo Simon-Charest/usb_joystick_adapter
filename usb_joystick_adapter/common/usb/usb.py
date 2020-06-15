@@ -134,7 +134,7 @@ def load_hid_boot_gui(files, file_name, data_label):
     if file_name in ('', 'None'):
         messagebox.showinfo('Information', 'Configuration must be selected.')
 
-        return
+        return False
 
     file = get_file(files, file_name)
     response = load_hid_boot_cli(file)
@@ -164,7 +164,7 @@ def load_hid_boot_cli(configuration_file_name):
 
     except subprocess.CalledProcessError as called_process_error:
         print(f'Called Process Error Exception: {called_process_error}')
-        print(f'Try unplugging and replugging device before running this command again.')
+        print(f'Try unplugging then replugging device, while holding Button 1, before running this command again.')
 
         return False
 
@@ -175,7 +175,7 @@ def read_gui(devices, device_name, data_label):
     if device_name in ('', 'None'):
         messagebox.showinfo('Information', 'Device must be selected.')
 
-        return
+        return False
 
     device = get_device(devices, device_name)  # Get device by name
     response = read_cli(device)
@@ -218,7 +218,9 @@ def read_cli(device):
         data = None
 
         for address in range(0, 32512, 16):
-            data = hid_device.read(address)  # TODO: Fix Input/Output Error Exception: read error
+            # TODO: Fix this: No data returned
+            data = hid_device.read(address)
+
             print(f'Read: [Block: {int(address / 16)}, Address: {address}, Data: {data}]')
 
         hid_device.close()
@@ -264,7 +266,11 @@ def test_cli(device_name):
 
     hid_device = hid.device()
     hid_device.open(device_name['vendor_id'], device_name['product_id'])
-    product = hid_device.get_product_string()
+    product = None
+    # product = hid_device.get_product_string()
+
+    print('Use joystick to test.')
+    print('Hold Escape while using joystick to quit.')
 
     try:
         # TODO: Fix test release (currently needs to hold escape key while using joystick)
@@ -300,11 +306,7 @@ def test_cli(device_name):
                 pass
 
             elif data[2] in [1, 3]:  # Button 1 / A
-                if 'Atari C64 Amiga Joystick' in product:
-                    action += '1'
-
-                elif 'Sega Genesis Joypad' in product:
-                    action += 'A'
+                action += '1'
 
             elif data[2] == 8:  # Start button
                 action += 'S'
@@ -314,12 +316,11 @@ def test_cli(device_name):
 
             string = f'Data: {data}, Action: {action}'
 
-            if constant.DEBUG:
-                print(string)
+            print(string)
 
-            hid_device.close()
+        hid_device.close()
 
-            return True
+        return True
 
     except:
         return False
