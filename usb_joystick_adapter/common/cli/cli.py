@@ -57,6 +57,7 @@ def execute():
         print(f'configuration_file_name: {configuration_file_name}')
         print(f'device_key: {device_key}')
         print(f'device_argument: {device_argument}')
+        print(f'device_name: {device_name}')
 
     # Manage input arguments
     if len(sys.argv) == 3 and '-b' in sys.argv and configuration_argument:
@@ -102,19 +103,37 @@ def get_argument(sublist):
     return None
 
 
-def get_device(device_argument):
-    # TODO: Dev this
-    return ''
+def get_device(argument):
+    device = None
+
+    if argument:
+        vendor_ids = [constant.ADAPTER['boot']['vendor_id'], constant.ADAPTER['operation']['vendor_id']]
+        product_ids = [constant.ADAPTER['boot']['product_id'], constant.ADAPTER['operation']['product_id']]
+        devices = usb.get_devices(vendor_ids, product_ids)
+        device_name = get_string(argument)
+        device = usb.get_device(devices, device_name)
+
+    return device
 
 
 def get_file_name(argument):
-    if not argument:
-        return None
+    file_name = None
 
-    start = argument.find(':') + 1
-    file_name = argument[start:]
+    if argument:
+        string = get_string(argument)
+        file_name = f'{constant.ROOT_DIR}/data/{string}.hex'
 
-    return f'{constant.ROOT_DIR}/data/{file_name}.hex'
+    return file_name
+
+
+def get_string(argument):
+    string = None
+
+    if argument:
+        start = argument.find(':') + 1
+        string = argument[start:]
+
+    return string
 
 
 def get_sublist(list_, substring):
